@@ -1,0 +1,11 @@
+body {
+  font-size: 18px;
+  color: #C5C6C7;
+  background-color: #0B0C10;
+  text-align: center;
+}
+
+/* Custom overrides to bootstrap */
+.bg-dark {
+  background-color: #1F2833
+}
