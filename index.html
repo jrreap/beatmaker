@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+        <!-- Login Page -->
         <script src="/lib/jquery-3.6.0.js"></script>
         <link type="text/css" rel="stylesheet" href="/lib/bootstrap-5.1.1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="css/index.css">
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
         <script src="/lib/bootstrap-5.1.1/js/bootstrap.min.js"></script>
-        <script src='index.js'></script>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width">
         <title>Beat Maker</title>
     </head>
-    <body>
-        
-
+    <body id="particles">
+        <div class="login-box">
+            <h1>Beat Maker</h1>
+            <form id='nameform'>
+                <div class='form-group'>
+                <label for='fname'>User Name:</label>
+                <input id='fname' type='text' class='form-control' required>
+            </div>
+            <div class='form-group'>
+                <label for='lname'>Password:</label>
+                <input id='lname' type='text' class='form-control' required>
+            </div>
+                <input type='submit' id='submit-btn' class='btn btn-danger' value='Make It So'>
+            </form>
+        </div>
     </body>
 
     <script src="./js/phoenix-audio.js"></script>
+    <script>particlesJS.load('particles', '/assets/particlesjs-config.json');</script>
 </html>

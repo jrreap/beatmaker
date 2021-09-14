@@ -1,0 +1,26 @@
+#particles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 50% 50%;
+    background-color: #0B0C10;
+    background-image: url("");
+    overflow: hidden;
+}
+
+.login-box{
+    display: flex;
+    flex-direction: column;
+    background-color: #66FCF1 !important;
+    height:50%;
+    width:50%;
+    margin: auto;
+    padding: 2%;
+    border-radius: 2%;
+}
