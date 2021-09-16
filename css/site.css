@@ -1,0 +1,20 @@
+/*
+  SITE WIDE THEME
+  ADD TO ALL FILES
+*/
+
+body {
+  font-size: 18px;
+  color: #C5C6C7;
+  background-color: #0B0C10;
+  text-align: center;
+}
+
+h1 {
+  color: #66FCF1
+}
+
+/* Custom overrides to bootstrap */
+.bg-dark {
+  background-color: #1F2833
+}

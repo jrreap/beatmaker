@@ -1,0 +1,47 @@
+body{
+    
+}
+
+#particles {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 50% 50%;
+    background-color: #0B0C10;
+}
+
+.page{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.login-box{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
+    background-color: #c5c6c7c2 !important;
+    height:70%;
+    width:30%;
+    padding: 3%;
+}
+
+#title{
+    font-size: 7rem;
+    color: #66fcf2
+}
+
+.form-group{
+    font-size: 2.5rem;
+}
