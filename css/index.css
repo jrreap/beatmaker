@@ -1,3 +1,7 @@
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 #particles {
     position: absolute;
     top: 0;
@@ -10,17 +14,35 @@
     background-attachment: fixed;
     background-size: 50% 50%;
     background-color: #0B0C10;
-    background-image: url("");
-    overflow: hidden;
+}
+
+.page{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
 }
 
 .login-box{
     display: flex;
     flex-direction: column;
-    background-color: #66FCF1 !important;
+    justify-content: center;
+    align-items: center;
+    background-color: #66fcf2cc !important;
     height:50%;
-    width:50%;
-    margin: auto;
-    padding: 2%;
+    width:40%;
+    padding: 5%;
     border-radius: 2%;
+}
+
+#login-box-header{
+    font-size: 4rem;
+    padding:5%;
+}
+
+.form-group{
+    font-size: 2rem;
 }

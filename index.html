@@ -10,20 +10,24 @@
         <meta name="viewport" content="width=device-width">
         <title>Beat Maker</title>
     </head>
-    <body id="particles">
-        <div class="login-box">
-            <h1>Beat Maker</h1>
-            <form id='nameform'>
-                <div class='form-group'>
-                <label for='fname'>User Name:</label>
-                <input id='fname' type='text' class='form-control' required>
+    <body>
+        <div id="particles">
+            <div class="page">
+                <div class="login-box">
+                    <h1 id="login-box-header">Beat Maker</h1>
+                    <form id='nameform'>
+                        <div class='form-group'>
+                            <label for='fname'>User Name:</label>
+                            <input id='fname' type='text' class='form-control' required>
+                        </div>
+                        <div class='form-group'>
+                            <label for='lname'>Password:</label>
+                            <input id='lname' type='text' class='form-control' required>
+                        </div>
+                        <input type='submit' id='submit-btn' class='btn btn-danger' value='Make It So'>
+                    </form>
+                </div>
             </div>
-            <div class='form-group'>
-                <label for='lname'>Password:</label>
-                <input id='lname' type='text' class='form-control' required>
-            </div>
-                <input type='submit' id='submit-btn' class='btn btn-danger' value='Make It So'>
-            </form>
         </div>
     </body>
 
