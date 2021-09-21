@@ -6,6 +6,7 @@ CISC474 Group 5 Project
 2. Dontae Esdaile
 3. Jaydon Reap
 4. Yifan Ni
+5. Emily Taylor
 
 ### Project Paragraph
 When we finish the project we plan to have a website where the user can upload or select a set of sounds and create their own musical beat. Once the user is satisfied with their beat, they can save their musical creation to an audio file for future reference. 
@@ -18,6 +19,7 @@ Have a selection of audio “snippets” of various instruments/beats that can b
 2. Dontae Esdaile: UI 
 3. Jaydon Reap: Engine logic + help on interface/UX
 4. Yifan Ni: design
+5. Emily: UI/Design (History Page)
 
 
 
