@@ -6,7 +6,7 @@ body {
     background-color: #525E6D;
 }
 
-.menu-button {
+.menu-button, .play-record-btn button {
     background-color: antiquewhite;
     border-radius: 4px;
     border-color: transparent;
