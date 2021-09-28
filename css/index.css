@@ -27,15 +27,6 @@
   font-size: 3rem;
 }
 
-.login-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 40%;
-  width: 30%;
-  padding: 3%;
-}
-
 #title {
   font-size: 7rem;
   color: #66fcf2;
