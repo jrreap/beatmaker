@@ -12,28 +12,9 @@
   background-color: #0b0c10;
 }
 
-.page {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-}
-
 #login-box-header {
   color: #66fcf2;
   font-size: 3rem;
-}
-
-.login-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 40%;
-  width: 30%;
-  padding: 3%;
 }
 
 #title {
@@ -62,7 +43,6 @@
   color: #66fcf2;
   background-color: transparent;
   border: none;
-  padding: 10%;
 }
 
 #create-new-account:hover {

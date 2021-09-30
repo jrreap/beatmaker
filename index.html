@@ -17,20 +17,28 @@
 
 <body>
     <div id="particles">
-        <div class="page">
-            <h1 class="display-1" id="title">Beat Maker</h1>
-            <div class="bg-dark login-box">
-                <h2 class="display-1" id="login-box-header"> Login</h2>
-                <form id='login-form'>
-                    <div class='form-group display-1'>
-                        <input class="form-control" id="username-input" placeholder="username" type='text' required>
+        <div class="container-fluid h-100 position-absolute">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-6">
+                    <h1 class="display-1" id="title">Beat Maker</h1>
+                    <div class="card bg-dark">
+                        <div class="card-body">
+                            <h2 class="display-1" id="login-box-header"> Login</h2>
+                            <form id='login-form'>
+                                <div class='form-group display-1'>
+                                    <input class="form-control" id="username-input" placeholder="username" type='text'
+                                        required>
+                                </div>
+                                <div class='form-group display-1'>
+                                    <input class="form-control" id="password-input" placeholder="password"
+                                        type='password' required>
+                                </div>
+                                <input type='submit' id='submit-btn' class='btn btn-danger' value='Login'>
+                            </form>
+                            <a href="./pages/createNewAccount.html" id="create-new-account">Create New Account</a>
+                        </div>
                     </div>
-                    <div class='form-group display-1'>
-                        <input class="form-control" id="password-input" placeholder="password" type='password' required>
-                    </div>
-                    <input type='submit' id='submit-btn' class='btn btn-danger' value='Login'>
-                </form>
-                <a href="./pages/createNewAccount.html" id="create-new-account">Create New Account</a>
+                </div>
             </div>
         </div>
     </div>
