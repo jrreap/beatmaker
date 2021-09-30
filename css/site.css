@@ -22,3 +22,22 @@ h1 {
 .bg-dark {
   background-color: #1F2833
 }
+
+.text-white {
+  color: #C5C6C7 !important
+}
+
+/* Button Overrides */
+
+.btn.btn-primary {
+  background-color: #1f2833;
+  color: #C5C6C7;
+  width: 50%;
+  border: none;
+}
+
+.btn.btn-primary:hover {
+  background-color: #45A29E;
+  width: 50%;
+  border: none;
+}
