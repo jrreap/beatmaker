@@ -1,37 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-        <!-- Login Page -->
-        <script src="/lib/jquery-3.6.0.js"></script>
-        <link type="text/css" rel="stylesheet" href="/lib/bootstrap-5.1.1/css/bootstrap.min.css"/>
-        <link type="text/css" rel="stylesheet" href="css/index.css">
-        <link type="text/css" rel="stylesheet" href="css/site.css">
-        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-        <script src="js/index.js"></script>
-        <script src="./js/phoenixAudio.js"></script>
-        <script>particlesJS.load('particles', '/assets/particlesjs-config.json');</script>
-        <meta charset="utf-8"> 
-        <meta name="viewport" content="width=device-width">
-        <title>Beat Maker</title>
+<!-- Login Page -->
+<script src="/lib/jquery-3.6.0.js"></script>
+<link type="text/css" rel="stylesheet" href="/lib/bootstrap-5.1.1/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="css/index.css">
+<link type="text/css" rel="stylesheet" href="css/site.css">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="js/index.js"></script>
+<script src="./js/phoenixAudio.js"></script>
+<script>particlesJS.load('particles', '/assets/particlesjs-config.json');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Beat Maker</title>
 
-    </head>
-    <body>
-        <div id="particles">
-            <div class="page">
-                <h1 class="display-1" id="title">Beat Maker</h1>
-                <div class="bg-dark login-box">
-                    <h2 class="display-1" id="login-box-header"> Login</h2>
-                    <form id='login-form'>
-                        <div class='form-group display-1'>
-                            <input class="form-control" id="username-input" placeholder="username"  type='text'  required>
+</head>
+
+<body>
+    <div id="particles">
+        <div class="container-fluid h-100 position-absolute">
+            <div class="row justify-content-center align-content-center h-100">
+                <div class="col-5">
+                    <h1 class="display-1" id="title">Beat Maker</h1>
+                    <div class="card bg-dark">
+                        <div class="card-body">
+                            <h2 class="display-1" id="login-box-header"> Login</h2>
+                            <form id='login-form'>
+                                <div class='form-group display-1'>
+                                    <input class="form-control" id="username-input" placeholder="username" type='text'
+                                        required>
+                                </div>
+                                <div class='form-group display-1'>
+                                    <input class="form-control" id="password-input" placeholder="password"
+                                        type='password' required>
+                                </div>
+                                <input type='submit' id='submit-btn' class='btn btn-danger' value='Login'>
+                            </form>
+                            <a href="./pages/createNewAccount.html" id="create-new-account">Create New Account</a>
                         </div>
-                        <div class='form-group display-1'>
-                            <input class="form-control" id="password-input" placeholder="password"  type='password' required>
-                        </div>
-                        <input type='submit' id='submit-btn' class='btn btn-danger' value='Login'>
-                    </form>
-                    <a href="./pages/createNewAccount.html" id="create-new-account">Create New Account</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>
