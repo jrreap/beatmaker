@@ -9,70 +9,104 @@
         <meta name="viewport" content="width=device-width">
         <title>Beat Maker</title>
 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link type="text/css" rel="other stylesheet" href="../css/beatmaker.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
     <body>
 
+        <!-- NAV BAR -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">BeatMaker</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="studio" href="./beatmaker.html">Studio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./profile.html">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">History</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+
         <div class="container">
-            <h1>Beat Maker</h1>
+            <h1>BEAT MAKER</h1>
             <p>Become a beat star!</p>
         </div>
 
-        <div class= "menu-pane">
-            <button type ="button">Save</button>
-            <button type ="button">Exit</button>
-            <button type ="button">Profile</button>
-    
-        </div>
-
-        <div class="beat-pad-btn-row-1">
-            <button type ="button">Drums</button>
-            <button type ="button">Bass</button>
-            <button type ="button">Guitar</button>
-            <button type ="button">4</button>
-            <button type ="button">5</button>
-            <button type ="button">6</button>
-            <button type ="button">7</button>
-            <button type ="button">8</button>
-        </div>
-
-        <div class = "beat-pad-butn-row-2">
-            <button type ="button">9</button>
-            <button type ="button">10</button>
-            <button type ="button">11</button>
-            <button type ="button">12</button>
-            <button type ="button">13</button>
-            <button type ="button">14</button>
-            <button type ="button">15</button>
-            <button type ="button">16</button>
-        </div>
-
-        <div class = "beat-pad-butn-row-3">
-            <button type ="button">17</button>
-            <button type ="button">18</button>
-            <button type ="button">19</button>
-            <button type ="button">20</button>
-            <button type ="button">21</button>
-            <button type ="button">22</button>
-            <button type ="button">23</button>
-            <button type ="button">24</button>
-        </div>
-
-        <div class = "beat-pad-butn-row-4">
-            <button type ="button">25</button>
-            <button type ="button">26</button>
-            <button type ="button">27</button>
-            <button type ="button">28</button>
-            <button type ="button">29</button>
-            <button type ="button">30</button>
-            <button type ="button">31</button>
-            <button type ="button">32</button>
-        </div>
+        <div class ="container">
 
         
+            <div class= "menu-pane">
+                <button class= "menu-button" type ="button">Save</button>
+                <button class= "menu-button" type ="button">Exit</button>
+                <button class= "menu-button" type ="button">Profile</button>
+        
+            </div>
 
-        <div class = "play-record-btn">
-            <button type ="button">Play</button>
-            <button type ="button">Record</button>
+            <div class="beatpad beat-pad-btn-row-1">
+                <button type ="button">Drums</button>
+                <button type ="button">Bass</button>
+                <button type ="button">Guitar</button>
+                <button type ="button">4</button>
+                <button type ="button">5</button>
+                <button type ="button">6</button>
+                <button type ="button">7</button>
+                <button type ="button">8</button>
+            </div>
+
+            <div class = "beatpad beat-pad-btn-row-2">
+                <button type ="button">9</button>
+                <button type ="button">10</button>
+                <button type ="button">11</button>
+                <button type ="button">12</button>
+                <button type ="button">13</button>
+                <button type ="button">14</button>
+                <button type ="button">15</button>
+                <button type ="button">16</button>
+            </div>
+
+            <div class = "beatpad beat-pad-btn-row-3">
+                <button type ="button">17</button>
+                <button type ="button">18</button>
+                <button type ="button">19</button>
+                <button type ="button">20</button>
+                <button type ="button">21</button>
+                <button type ="button">22</button>
+                <button type ="button">23</button>
+                <button type ="button">24</button>
+            </div>
+
+            <div class = "beatpad beat-pad-btn-row-4">
+                <button type ="button">25</button>
+                <button type ="button">26</button>
+                <button type ="button">27</button>
+                <button type ="button">28</button>
+                <button type ="button">29</button>
+                <button type ="button">30</button>
+                <button type ="button">31</button>
+                <button type ="button">32</button>
+            </div>
+
+            
+
+            <div class = "play-record-btn">
+                <button type ="button">Play</button>
+                <button type ="button">Record</button>
+            </div>
         </div>
 
 
