@@ -5,10 +5,6 @@
     max-width: 190px;
 }
 
-body {
-    background-color: #525E6D;
-}
-
 .menu-button, .play-record-btn button {
     background-color: antiquewhite;
     border-radius: 4px;
