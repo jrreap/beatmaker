@@ -1,14 +1,12 @@
 $(document).ready(function () {
-
-    $("#drums").on('click', function () {
-        // song_array.push()
-        var audio = new Audio('../assets/audio/drum1.wav');
-        audio.play();
-    })
-
-    $("#guitar").on('click', function () {
-        var audio = new Audio('../assets/audio/guitar1.wav');
-        audio.play();
+    $(".instruments").on('click', function (e) {
+        try {
+            let audioString = e.currentTarget.id
+            console.log(e.currentTarget.id)
+            var audio = new Audio(`../assets/audio/${audioString}.wav`);
+            audio.play();
+        } catch (error) {
+            console.log(error)
+        }
     })
 })
-
