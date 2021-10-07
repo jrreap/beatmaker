@@ -26,25 +26,3 @@
   padding: 3%;
   font-size: 2.5rem;
 }
-
-#submit-btn {
-  background-color: #1f2833;
-  width: 50%;
-  border: none;
-}
-
-#submit-btn:hover {
-  background-color: #66fcf2;
-  width: 50%;
-  border: none;
-}
-
-#create-new-account {
-  color: #66fcf2;
-  background-color: transparent;
-  border: none;
-}
-
-#create-new-account:hover {
-  color: #47aca5;
-}

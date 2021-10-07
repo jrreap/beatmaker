@@ -4,6 +4,8 @@
 <link type="text/css" href="../lib/fontawesome/css/all.min.css" rel="stylesheet">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>particlesJS.load('particles', '/assets/particlesjs-config.json');</script>
 <title>BeatMaker | Profile</title>
 
 <link type="text/css" rel="stylesheet" href="/css/profile.css" />
@@ -11,7 +13,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">BeatMaker</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -30,11 +32,15 @@
             <a class="nav-link" href="./history.html">History</a>
           </li>
         </ul>
+        <ul class='navbar-nav justify-content-end w-100'>
+          <li class="nav-item align-self-end">
+            <a class="nav-link" href="../index.html">Logout</a>
+          </li>
+        </ul>
       </div>
-    </div>
   </nav>
 
-  <div class="container text-start">
+  <div class="container-fluid h-100 position-absolute text-start">
     <div class="row justify-content-center">
       <div class="col-4">
         <div style="width: 250px; height: 250px" class="bg-primary"></div>
@@ -85,7 +91,7 @@
       </div>
     </div>
   </div>
-
+  </div>
   <script src="/lib/jquery-3.6.0.js"></script>
   <script src="/lib/bootstrap-5.1.1/js/bootstrap.min.js"></script>
 
