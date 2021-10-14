@@ -12,6 +12,9 @@ let currentInstrument = INSTRUMENTS.SYNTH
 
 $(document).ready(initialize)
 
+/**
+ * Called once on page load. This is where all of the initialization logic goes
+ */
 function initialize () {
   generateWorkspace()
   bindToInstrumentButtons()
@@ -38,6 +41,9 @@ function generateWorkspace () {
   }
 }
 
+/**
+ * Adds handlers to each of the instrument selection buttons dynamically
+ */
 function bindToInstrumentButtons () {
   $('.instrument').on('click', function (e) {
     changeInstrument(e.currentTarget.id)
@@ -60,11 +66,20 @@ function setUpButtons () {
 }
 
 /* LISTENERS and UTILITIES */
+/**
+ * Changes the currently selected instrument to the passed param
+ * @param {number} instrument The instrument code to select
+ */
 function changeInstrument (instrument) {
   console.log('Instrument changed to ' + instrument)
   currentInstrument = instrument
 }
 
+/**
+ * Sets the clicked track space to play the specified instrument
+ * @param {JQuery<HTMLElement>} element The HTMLElement of the track cell selected
+ * @param {number} instrument The instrument code
+ */
 function setSpaceInstrument (element, instrument) {
   console.log('Set instrument space to ' + instrument)
   element.text('')
