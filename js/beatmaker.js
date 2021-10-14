@@ -1,3 +1,15 @@
+const INSTRUMENTS = {
+  SYNTH: 1,
+  PIANO: 2,
+  ORGAN: 3,
+  HORN: 4,
+  GUITAR: 5,
+  FLUTE: 6,
+  BASE: 7
+}
+
+let currentInstrument = INSTRUMENTS.SYNTH
+
 $(document).ready(initialize)
 
 function initialize () {
@@ -6,7 +18,7 @@ function initialize () {
 }
 
 /**
- * Generates the track rows and columns dynamically instead of duplicated the HTML statically
+ * Generates the track rows and columns dynamically instead of duplicating the HTML statically
  */
 function generateWorkspace () {
   const workspace = $('#workspace')
@@ -15,13 +27,10 @@ function generateWorkspace () {
     workspace.append(row)
 
     for (let j = 0; j < 14; j++) {
-      row.append(`
-      <div class="col track selector d-flex justify-content-center align-items-center">
-          <div>
-              <p></p>
-          </div>
-      </div>
-      `)
+      const col = $(`<div id='track${i}-cell${j}' class="col track selector d-flex justify-content-center align-items-center"></div>`)
+      row.append(col)
+
+      col.on('click', () => { setSpaceInstrument(col, currentInstrument) })
     }
   }
 }
@@ -39,4 +48,15 @@ function setUpButtons () {
       console.log(error)
     }
   })
+}
+
+/* LISTENERS and UTILITIES */
+function changeInstrument (instrument) {
+  currentInstrument = instrument
+}
+
+function setSpaceInstrument (element, instrument) {
+  console.log('Set instrument space to ' + instrument)
+  element.html = ''
+  element.append(instrument)
 }
