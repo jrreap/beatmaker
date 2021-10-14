@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/jrreap/beatmaker/issues"
   },
-  "homepage": "https://github.com/jrreap/beatmaker#readme"
+  "homepage": "https://github.com/jrreap/beatmaker#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
