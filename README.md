@@ -1,6 +1,12 @@
 # beatmaker
 CISC474 Group 5 Project
 ---
+
+### Install Instructions
+Install the necessary packages with `npm i`
+
+Then run the main server with
+`npm start`
 ### Group Names 
 1. Casey Rock
 2. Dontae Esdaile
@@ -21,11 +27,6 @@ Have a selection of audio “snippets” of various instruments/beats that can b
 4. Yifan Ni: design
 5. Emily: UI/Design (History Page)
 
-
-
-
-
-
 ### Colors 
 ```
 #0B0C10 -- Black
@@ -34,7 +35,6 @@ Have a selection of audio “snippets” of various instruments/beats that can b
 #66FCF1 -- Cyan
 #45A29E -- blue/grey
 ```
-
 
 ### Refrence 
 
