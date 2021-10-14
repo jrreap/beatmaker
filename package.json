@@ -1,0 +1,22 @@
+{
+  "name": "beatmaker",
+  "version": "1.0.0",
+  "description": "A simple yet powerful browser based digital audio workstation",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrreap/beatmaker.git"
+  },
+  "author": "BeatMaker Inc.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jrreap/beatmaker/issues"
+  },
+  "homepage": "https://github.com/jrreap/beatmaker#readme"
+}
