@@ -1,3 +1,21 @@
+.col.track {
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+    height: 6rem;
+}
+
+.row.track {
+    background-color: #FF99FF;
+    height: 100%;
+}
+
+.selector {
+    text-decoration: none;
+}
+
+
+
 .menu-pane {
     padding: 5px;
     position: relative;
