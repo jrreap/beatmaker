@@ -14,6 +14,9 @@ $(document).ready(initialize)
 
 function initialize () {
   generateWorkspace()
+  bindToInstrumentButtons()
+
+  // Legacy
   setUpButtons()
 }
 
@@ -35,6 +38,12 @@ function generateWorkspace () {
   }
 }
 
+function bindToInstrumentButtons () {
+  $('.instrument').on('click', function (e) {
+    changeInstrument(e.currentTarget.id)
+  })
+}
+
 function setUpButtons () {
   const playedAudioArray = []
   $('.instruments').on('click', function (e) {
@@ -52,11 +61,12 @@ function setUpButtons () {
 
 /* LISTENERS and UTILITIES */
 function changeInstrument (instrument) {
+  console.log('Instrument changed to ' + instrument)
   currentInstrument = instrument
 }
 
 function setSpaceInstrument (element, instrument) {
   console.log('Set instrument space to ' + instrument)
-  element.html = ''
+  element.text('')
   element.append(instrument)
 }
