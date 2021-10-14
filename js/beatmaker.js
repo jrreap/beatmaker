@@ -1,4 +1,32 @@
-$(document).ready(function () {
+$(document).ready(initialize)
+
+function initialize () {
+  generateWorkspace()
+  setUpButtons()
+}
+/**
+ * Generates the track rows and columns dynamically instead of duplicated the HTML statically
+ */
+
+function generateWorkspace () {
+  const workspace = $('#workspace')
+  for (let i = 0; i < 6; i++) {
+    const row = $('<div class="row track"></div>')
+    workspace.append(row)
+
+    for (let j = 0; j < 12; j++) {
+      row.append(`
+      <div class="col track selector d-flex justify-content-center align-items-center">
+          <div>
+              <p></p>
+          </div>
+      </div>
+      `)
+    }
+  }
+}
+
+function setUpButtons () {
   const playedAudioArray = []
   $('.instruments').on('click', function (e) {
     try {
@@ -11,4 +39,4 @@ $(document).ready(function () {
       console.log(error)
     }
   })
-})
+}
