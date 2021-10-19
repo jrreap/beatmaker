@@ -28,11 +28,15 @@ function initialize () {
  */
 function generateWorkspace () {
   const workspace = $('#workspace')
+
+  // On initial load generate a nice amount of columns for the screen size
+  const rowLimit = Math.round(screen.width / 64)
+
   for (let i = 0; i < 6; i++) {
     const row = $('<div class="row track"></div>')
     workspace.append(row)
 
-    for (let j = 0; j < 14; j++) {
+    for (let j = 0; j < rowLimit; j++) {
       const col = $(`<div id='track${i}-cell${j}' class="col track selector d-flex justify-content-center align-items-center"></div>`)
       row.append(col)
 
