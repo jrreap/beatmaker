@@ -1,14 +1,16 @@
 const INSTRUMENTS = {
-  SYNTH: 1,
-  PIANO: 2,
-  ORGAN: 3,
-  HORN: 4,
-  GUITAR: 5,
-  FLUTE: 6,
-  BASE: 7
+  SYNTH: 'synth',
+  PIANO: 'piano',
+  ORGAN: 'organ',
+  HORN: 'horn',
+  GUITAR: 'guitar',
+  FLUTE: 'flute',
+  BASS: 'bass'
 }
 
 let currentInstrument = INSTRUMENTS.SYNTH
+let loopIndex = 1
+const beatMatrix = {}
 
 $(document).ready(initialize)
 
@@ -30,19 +32,24 @@ function generateWorkspace () {
   const workspace = $('#workspace')
 
   // On initial load generate a nice amount of columns for the screen size
-  const rowLimit = Math.round(screen.width / 64)
+  const colLimit = Math.round(screen.width / 64)
 
   for (let i = 0; i < 6; i++) {
     const row = $('<div class="row track"></div>')
     workspace.append(row)
+    beatMatrix[i] = []
 
-    for (let j = 0; j < rowLimit; j++) {
+    for (let j = 0; j < colLimit; j++) {
       const col = $(`<div id='track${i}-cell${j}' class="col track selector d-flex justify-content-center align-items-center"></div>`)
       row.append(col)
 
-      col.on('click', () => { setSpaceInstrument(col, currentInstrument) })
+      beatMatrix[i][j] = ''
+
+      col.on('click', () => { setSpaceInstrument(i, j, col, currentInstrument) })
     }
   }
+
+  console.log(beatMatrix)
 }
 
 /**
@@ -77,6 +84,7 @@ function setUpButtons () {
 function changeInstrument (instrument) {
   console.log('Instrument changed to ' + instrument)
   currentInstrument = instrument
+  loopIndex = 1
 }
 
 /**
@@ -84,8 +92,12 @@ function changeInstrument (instrument) {
  * @param {JQuery<HTMLElement>} element The HTMLElement of the track cell selected
  * @param {number} instrument The instrument code
  */
-function setSpaceInstrument (element, instrument) {
+function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
   element.text('')
   element.append(instrument)
+
+  beatMatrix[row][col] = instrument + loopIndex
+
+  console.log(beatMatrix)
 }
