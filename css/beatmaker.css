@@ -25,6 +25,11 @@
     background-color: #EBFF99;
 }
 
+/* Bootstrap Overrides */
+.card-header {
+    background-color: grey;
+}
+
 .beat-pad-btn-row-1 button {
     background-color: #70C4C1;
 }
