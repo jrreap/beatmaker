@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="../lib/jquery-3.6.0.js"></script>
+    <link type="text/css" rel="stylesheet" href="./lib/bootstrap-5.1.1/css/bootstrap.min.css" />
+    <script src="../lib/bootstrap-5.1.1/js/bootstrap.min.js"></script>
+    <script src='../js/beatmaker1.js'></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Experimental</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link type="text/css" rel="other stylesheet" href="../css/beatmaker1.css">
+    <link type="text/css" rel="other stylesheet" href="../css/site.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <!-- NAV BAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">BeatMaker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="studio" href="./beatmaker.html">Studio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./profile.html">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">History</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+
+
+        <div class="menu-pane">
+            <button class="menu-button" type="button">Save</button>
+            <button class="menu-button" type="button">Exit</button>
+            <button class="menu-button" type="button">Profile</button>
+        </div>
+
+
+        <!-- Drums -->
+        <div class="drums beatpad beat-pad-btn-row-1">
+            <button id="Kick" class="instruments" type="button">Kick</button>
+            <button id="Crash" class="instruments" type="button">Crash</button>
+            <button id="Rides" class="instruments" type="button">Rides</button>
+            <button id="Snare" class="instruments" type="button">Snare</button>
+            <button id="Toms" class="instruments" type="button">Toms</button>
+            <button id="Conga" class="instruments" type="button">Conga</button>
+        </div>
+
+        <!-- Flutes -->
+        <div class="beatpad beat-pad-btn-row-2">
+            <button id="Flute1" class="instruments" type="button">Flute1</button>
+            <button id="Flute2" class="instruments" type="button">Flute2</button>
+            <button id="Flute3" class="instruments" type="button">Flute3</button>
+            <button id="Flute4" class="instruments" type="button">Flute4</button>
+            <button id="Flute5" class="instruments" type="button">Flute5</button>
+            <button id="Flute6" class="instruments" type="button">Flute6</button>
+            <button id="Flute7" class="instruments" type="button">Flute7</button>
+            <button id="Flute8" class="instruments" type="button">Flute8</button>
+        </div>
+
+        <!-- Organs -->
+        <div class="beatpad beat-pad-btn-row-3">
+            <button id="Organ1" class="instruments" type="button">Organ1</button>
+            <button id="Organ2" class="instruments" type="button">Organ2</button>
+            <button id="Organ3" class="instruments" type="button">Organ3</button>
+            <button id="Organ4" class="instruments" type="button">Organ4</button>
+            <button id="Organ5" class="instruments" type="button">Organ5</button>
+            <button id="Organ6" class="instruments" type="button">Organ6</button>
+            <button id="Organ7" class="instruments" type="button">Organ7</button>
+            <button id="Organ8" class="instruments" type="button">Organ8</button>
+        </div>
+
+        <!-- Piano -->
+        <div class="beatpad beat-pad-btn-row-4">
+            <button id="Piano1" class="instruments" type="button">Piano1</button>
+            <button id="Piano2" class="instruments" type="button">Piano2</button>
+            <button id="Piano3" class="instruments" type="button">Piano3</button>
+            <button id="Piano4" class="instruments" type="button">Piano4</button>
+            <button id="Piano5" class="instruments" type="button">Piano5</button>
+            <button id="Piano6" class="instruments" type="button">Piano6</button>
+            <button id="Piano7" class="instruments" type="button">Piano7</button>
+            <button id="Piano8" class="instruments" type="button">Piano8</button>
+        </div>
+
+        <!-- Synth -->
+        <div class="beatpad beat-pad-btn-row-4">
+            <button id="Synth1" class="instruments" type="button">Synth1</button>
+            <button id="Synth2" class="instruments" type="button">Synth2</button>
+            <button id="Synth3" class="instruments" type="button">Synth3</button>
+            <button id="Synth4" class="instruments" type="button">Synth4</button>
+            <button id="Synth5" class="instruments" type="button">Synth5</button>
+            <button id="Synth6" class="instruments" type="button">Synth6</button>
+        </div>
+
+
+        <div class="play-record-btn">
+            <button class="instruments" type="button">Play</button>
+            <button class="instruments" type="button">Record</button>
+        </div>
+        
+        
+        <input type="file" id="myfile" name="myfile">
+
+    </div>
+
+
+
+
+</body>
+
+<script src="./js/phoenix-audio.js"></script>
+
+</html>
