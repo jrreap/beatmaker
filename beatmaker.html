@@ -53,52 +53,58 @@
         <div id="workspace">
 
         </div>
-        <div class="row justify-content-start align-items-center bg-dark p-4">
+        <div class="row justify-content-start align-items-start bg-dark p-4">
             <div class="col-4">
-                <div class="row mb-2 justify-content-center align-items-center">
-                    <div class="col">
-                        <a id="synth" class="btn btn-primary instrument">Synth</a>
+                <div class="card border-secondary bg-dark">
+                    <div class="card-header">
+                        Instruments
                     </div>
-                    <div class="col">
-                        <a id="piano" class="btn btn-primary instrument">Piano</a>
+                    <div class="card-body">
+                        <div class="row gy-2 mb-2 justify-content-center align-items-center">
+                            <div class="col">
+                                <a id="synth" class="btn btn-primary instrument">Synth</a>
+                            </div>
+                            <div class="col">
+                                <a id="piano" class="btn btn-primary instrument">Piano</a>
+                            </div>
+                            <div class="col">
+                                <a id="organ" class="btn btn-primary instrument">Organ</a>
+                            </div>
+                            <div class="col">
+                                <a id="horn" class="btn btn-primary instrument">Horn</a>
+                            </div>
+                            <div class="col">
+                                <a id="guitar" class="btn btn-primary instrument">Guitar</a>
+                            </div>
+                            <div class="col">
+                                <a id="flute" class="btn btn-primary instrument">Flute</a>
+                            </div>
+                            <div class="col">
+                                <a id="bass" class="btn btn-primary instrument">Bass</a>
+                            </div>
+                            <div class="col">
+                                <a id="bass" class="btn btn-primary instrument">Bass</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col">
-                        <a id="organ" class="btn btn-primary instrument">Organ</a>
-                    </div>
-                    <div class="col">
-                        <a id="horn" class="btn btn-primary instrument">Horn</a>
-                    </div>
-                </div>
-                <div class="row justify-content-center align-items-center">
-                    <div class="col">
-                        <a id="guitar" class="btn btn-primary instrument">Guitar</a>
-                    </div>
-                    <div class="col">
-                        <a id="flute" class="btn btn-primary instrument">Flute</a>
-                    </div>
-                    <div class="col">
-                        <a id="bass" class="btn btn-primary instrument">Bass</a>
-                    </div>
-                    <div class="col">
-                        <a id="bass" class="btn btn-primary instrument">Bass</a>
-                    </div>
+
                 </div>
             </div>
             <div class="col-4">
                 <div class="card border-secondary bg-dark">
                     <div class="card-header">
-                        Stuff
+                        Sample Selection
                     </div>
                     <div class="card-body">
                         <div class="row align-items-center h-100">
                             <div class="col">
-                                <a class="btn btn-primary">Up</a>
+                                <a id="sample-prev" class="btn btn-primary">Prev</a>
                             </div>
                             <div class="col">
-                                <p id="" class="m-0 p-2">1</p>
+                                <p id="current-sample" class="m-0 p-2">1</p>
                             </div>
                             <div class="col">
-                                <a class="btn btn-primary">Down</a>
+                                <a id="sample-next" class="btn btn-primary">Next</a>
                             </div>
                         </div>
                     </div>
