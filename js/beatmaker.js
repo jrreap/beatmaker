@@ -9,7 +9,7 @@ const INSTRUMENTS = {
 }
 
 let currentInstrument = INSTRUMENTS.SYNTH
-let loopIndex = 1
+let sampleIndex = 1
 const beatMatrix = {}
 
 $(document).ready(initialize)
@@ -20,6 +20,7 @@ $(document).ready(initialize)
 function initialize () {
   generateWorkspace()
   bindToInstrumentButtons()
+  bindToSampleButtons()
 
   // Legacy
   setUpButtons()
@@ -61,6 +62,26 @@ function bindToInstrumentButtons () {
   })
 }
 
+/**
+ * Adds handlers to each of the sample change buttons (next and previous)
+ */
+function bindToSampleButtons () {
+  $('#sample-prev').on('click', () => changeSample(-1))
+  $('#sample-next').on('click', () => changeSample(1))
+}
+
+/**
+ * Changes the sample based off the passed changed value. Does accept negative values to go backwards
+ * @param {number} change The number of samples to "loop" through. Can be negative to go reverse.
+ */
+function changeSample (change) {
+  if (sampleIndex + change >= 1 && sampleIndex + change <= 6) {
+    sampleIndex += change
+
+    updateSampleDisplay()
+  }
+}
+
 function setUpButtons () {
   const playedAudioArray = []
   $('.instruments').on('click', function (e) {
@@ -100,4 +121,13 @@ function setSpaceInstrument (row, col, element, instrument) {
   beatMatrix[row][col] = instrument + loopIndex
 
   console.log(beatMatrix)
+}
+
+/**
+ * Updates the sample display to match the current selected sampleIndex
+ */
+function updateSampleDisplay () {
+  const sample = $('#sample-index')
+  sample.text('')
+  sample.append(sampleIndex)
 }
