@@ -105,7 +105,9 @@ function setUpButtons () {
 function changeInstrument (instrument) {
   console.log('Instrument changed to ' + instrument)
   currentInstrument = instrument
-  loopIndex = 1
+  sampleIndex = 1
+
+  updateSampleDisplay()
 }
 
 /**
@@ -118,7 +120,7 @@ function setSpaceInstrument (row, col, element, instrument) {
   element.text('')
   element.append(instrument)
 
-  beatMatrix[row][col] = instrument + loopIndex
+  beatMatrix[row][col] = instrument + sampleIndex
 
   console.log(beatMatrix)
 }
