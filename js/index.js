@@ -1,12 +1,16 @@
 $(document).ready(function () {
   $('#submit-btn').on('click', function (e) {
     e.preventDefault()
-    const username = $('#username-input').val()
+    const email = $('#email-input').val()
     const password = $('#password-input').val()
-
-    console.log('Username: ' + username)
-    console.log('Password: ' + password)
-    window.location.href = 'beatmaker.html'
+    $.ajax({
+      url: '/login',
+      type: 'POST',
+      data: { "email": email, "password": password },
+      success: function (result) {
+        localStorage.setItem("uid", result);
+      }
+    });
     return false
   })
 })
