@@ -20,10 +20,7 @@ $(document).ready(initialize)
 function initialize () {
   generateWorkspace()
   bindToInstrumentButtons()
-  bindToSampleButtons()
-
-  // Legacy
-  setUpButtons()
+  bindToControlButtons()
 }
 
 /**
@@ -65,9 +62,10 @@ function bindToInstrumentButtons () {
 /**
  * Adds handlers to each of the sample change buttons (next and previous)
  */
-function bindToSampleButtons () {
+function bindToControlButtons () {
   $('#sample-prev').on('click', () => changeSample(-1))
   $('#sample-next').on('click', () => changeSample(1))
+  $('#play').on('click', playBeat)
 }
 
 /**
@@ -82,6 +80,37 @@ function changeSample (change) {
   }
 }
 
+/**
+ * Reads in the beat matrix and plays back the audio
+ */
+function playBeat () {
+  const mappedMatrix = Object.values(beatMatrix)
+  const audioFiles = prepareAudioFiles(mappedMatrix)
+
+  for (const row of mappedMatrix) {
+
+  }
+}
+
+/**
+ * Reads in the beat matrix and loads all required audio files. To save memory each file is loaded only once
+ * @param {} mappedMatrix The key value pairs of each audio file, mapped to the actual loaded file
+ * @returns {{name: HTMLMediaElement}} The mapped audio files
+ */
+function prepareAudioFiles (mappedMatrix) {
+  const audioList = {}
+
+  for (const row of mappedMatrix) {
+    for (const col of row) {
+      if (col !== '' && !(col in audioList)) {
+        audioList[col] = new Audio(`../assets/audio/${col}.wav`)
+      }
+    }
+  }
+
+  return audioList
+}
+
 function setUpButtons () {
   const playedAudioArray = []
   $('.instruments').on('click', function (e) {
@@ -89,7 +118,7 @@ function setUpButtons () {
       const audioString = e.currentTarget.id
       console.log(e.currentTarget.id)
       playedAudioArray.push(audioString)
-      var audio = new Audio(`../assets/audio/${audioString}.wav`)
+      const audio = new Audio(`../assets/audio/${audioString}.wav`)
       audio.play()
     } catch (error) {
       console.log(error)
@@ -132,4 +161,15 @@ function updateSampleDisplay () {
   const sample = $('#sample-index')
   sample.text('')
   sample.append(sampleIndex)
+}
+
+/**
+ * Utility function that pauses the runtime to sync up beats
+ * @param {number} delay The time to wait in miliseconds
+ * @returns {Promise}
+ */
+function sleep (delay) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay)
+  })
 }
