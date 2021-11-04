@@ -9,8 +9,8 @@ $(document).ready(function () {
       type: 'POST',
       data: { "email": email, "password": password },
       statusCode: {
-        200: function (result) {
-          sessionStorage.setItem("uid", result);
+        200: function (userID) {
+          sessionStorage.setItem("uid", userID);
           window.location.href = '/beatmaker.html'
         },
         203: function (result) {

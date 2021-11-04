@@ -2,8 +2,7 @@ import express from 'express'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
-import { createNewUser } from './firebase/fire-auth.js'
-import { signInUser } from './firebase/fire-auth.js'
+import { createNewUser, signInUser, sessionAuth } from './firebase/fire-auth.js'
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebase/fire-app.js'
 
@@ -37,6 +36,14 @@ app.post('/login', (req, res) => {
 
 app.use('/', express.static(join(__dirname, '')))
 
+app.post('/authenticateRoute', (req, res) => {
+  let sessionUID = req.body.uid
+  sessionAuth(res, sessionUID)
+
+})
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}...`)
 })
+
+

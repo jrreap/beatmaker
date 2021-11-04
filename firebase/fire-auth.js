@@ -1,15 +1,18 @@
 import e from "express";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-// import { initializeApp } from "firebase/app";
-// import firebaseConfig from './fire-app.js'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore"
 
 
 function createNewUser(res, email, password) {
     const auth = getAuth();
+    const db = getFirestore();
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const user = userCredential.user;
-            const userId = userCredential.user.getIdToken()
+            const userId = userCredential.user.uid
+            setDoc(doc(db, "users", userId), {
+                email: email,
+                beats: []
+            });
             res.status(200).send(userId)
         })
         .catch((error) => {
@@ -29,8 +32,25 @@ function signInUser(res, email, password) {
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            res.status(203).send("Sending HEre" + errorMessage)
+            res.status(203).send("Sending Here" + errorMessage)
         });
 }
 
-export { createNewUser, signInUser }
+function sessionAuth(res, uid) {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const userID = user.uid;
+            if (uid == userID) {
+                res.status(200).send(true)
+            } else {
+                res.status(203).send(false)
+            }
+        } else {
+            res.status(203).send(false)
+        }
+    });
+
+}
+
+export { createNewUser, signInUser, sessionAuth }
