@@ -83,12 +83,22 @@ function changeSample (change) {
 /**
  * Reads in the beat matrix and plays back the audio
  */
-function playBeat () {
+async function playBeat () {
   const mappedMatrix = Object.values(beatMatrix)
   const audioFiles = prepareAudioFiles(mappedMatrix)
 
-  for (const row of mappedMatrix) {
+  for (let i = 0; i < 4; i++) {
+    const promises = []
+    for (const row of mappedMatrix) {
+      if (row[i] !== '') {
+        promises.push(audioFiles[row[i]].play)
+      }
+    }
 
+    console.log(promises)
+
+    Promise.all(promises)
+    await sleep(1000)
   }
 }
 
