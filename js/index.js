@@ -3,14 +3,27 @@ $(document).ready(function () {
     e.preventDefault()
     const email = $('#email-input').val()
     const password = $('#password-input').val()
+    $("#liveAlertPlaceholder").empty();
     $.ajax({
       url: '/login',
       type: 'POST',
       data: { "email": email, "password": password },
-      success: function (result) {
-        localStorage.setItem("uid", result);
+      statusCode: {
+        200: function (result) {
+          sessionStorage.setItem("uid", result);
+          window.location.href = '/beatmaker.html'
+        },
+        203: function (result) {
+          display_alert(result.replace("Firebase: ", ''), 'danger')
+        }
       }
     });
     return false
   })
 })
+
+function display_alert(message, type) {
+  var wrapper = document.createElement('div')
+  wrapper.innerHTML = '<div id="alertDiv" class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '</div>'
+  $("#liveAlertPlaceholder").append(wrapper)
+}
