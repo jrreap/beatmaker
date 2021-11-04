@@ -23,15 +23,12 @@ function signInUser(res, email, password) {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const user = userCredential.user;
             const userId = userCredential.user.uid
-            console.log("Hey landed Here")
             res.status(200).send(userId)
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(error)
             res.status(203).send("Sending HEre" + errorMessage)
         });
 }
