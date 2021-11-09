@@ -66,6 +66,7 @@ function bindToControlButtons () {
   $('#sample-prev').on('click', () => changeSample(-1))
   $('#sample-next').on('click', () => changeSample(1))
   $('#play').on('click', playBeat)
+  $('#eraser').on('click', () => changeInstrument(''))
 }
 
 /**
@@ -121,21 +122,6 @@ function prepareAudioFiles (mappedMatrix) {
   return audioList
 }
 
-function setUpButtons () {
-  const playedAudioArray = []
-  $('.instruments').on('click', function (e) {
-    try {
-      const audioString = e.currentTarget.id
-      console.log(e.currentTarget.id)
-      playedAudioArray.push(audioString)
-      const audio = new Audio(`../assets/audio/${audioString}.wav`)
-      audio.play()
-    } catch (error) {
-      console.log(error)
-    }
-  })
-}
-
 /* LISTENERS and UTILITIES */
 /**
  * Changes the currently selected instrument to the passed param
@@ -159,7 +145,11 @@ function setSpaceInstrument (row, col, element, instrument) {
   element.text('')
   element.append(instrument)
 
-  beatMatrix[row][col] = instrument + sampleIndex
+  if (instrument !== '') {
+    beatMatrix[row][col] = instrument + sampleIndex
+  } else {
+    beatMatrix[row][col] = instrument // Eraser mode
+  }
 
   console.log(beatMatrix)
 }
