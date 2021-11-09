@@ -23,23 +23,41 @@ function initialize() {
     data: { "uid": sessionId },
     statusCode: {
       200: function (result) {
+        if (result) {
+          generateWorkspace()
+          bindToInstrumentButtons()
+          logoutBtn()
+          // Legacy
+          setUpButtons()
 
+        }
       },
       203: function (result) {
-        // window.location.href = '/index.html'
+        window.location.href = '/index.html'
       }
     }
   });
-
-  generateWorkspace()
-  bindToInstrumentButtons()
-
-  // Legacy
-  setUpButtons()
-
-
-
 }
+
+function logoutBtn() {
+  $('#logout-btn').on('click', function (e) {
+    $.ajax({
+      url: '/signOut',
+      type: 'POST',
+      statusCode: {
+        200: function (userID) {
+          sessionStorage.removeItem("uid");
+          window.location.href = '/beatmaker.html'
+        },
+        500: function (result) {
+          console.log(result)
+          // display_alert(result.replace("Firebase: ", ''), 'danger')
+        }
+      }
+    });
+  })
+}
+
 
 /**
  * Generates the track rows and columns dynamically instead of duplicating the HTML statically

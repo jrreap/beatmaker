@@ -1,6 +1,7 @@
 import e from "express";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore"
+
 
 
 function createNewUser(res, email, password) {
@@ -53,4 +54,13 @@ function sessionAuth(res, uid) {
 
 }
 
-export { createNewUser, signInUser, sessionAuth }
+function signOutUser(res) {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+        res.status(200).send("Logged Out")
+    }).catch((error) => {
+        res.status(500).send(error)
+    });
+}
+
+export { createNewUser, signInUser, sessionAuth, signOutUser }
