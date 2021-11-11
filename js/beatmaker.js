@@ -28,6 +28,7 @@ function initialize () {
  */
 function generateWorkspace () {
   const workspace = $('#workspace')
+  const icons = ['fa-plus', 'fa-guitar', 'fa-plus', 'fa-plus', 'fa-drum', 'fa-guitar']
 
   // On initial load generate a nice amount of columns for the screen size
   const colLimit = Math.round(screen.width / 64)
@@ -36,6 +37,10 @@ function generateWorkspace () {
     const row = $('<div class="row track"></div>')
     workspace.append(row)
     beatMatrix[i] = []
+
+    // Add the column marker
+    const marker = $(`<div class="col track marker d-flex justify-content-center align-items-center"><i class="fas ${icons[i]} fa-2x"></i></div>`)
+    row.append(marker)
 
     for (let j = 0; j < colLimit; j++) {
       const col = $(`<div id='track${i}-cell${j}' class="col track selector d-flex justify-content-center align-items-center"></div>`)
