@@ -3,6 +3,7 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
+import { readBeats } from './firebase/fire-beats.js'
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebase/fire-app.js'
 
@@ -46,11 +47,24 @@ app.post('/createNewAccount', (req, res) => {
 app.post('/login', (req, res) => {
   let email = req.body.email
   let password = req.body.password
-  signInUser(res, email, password)
+  signInUser(email, password, (result) => {
+    if (result.success) {
+      res.status(200).send(result.userId)
+    } else {
+      res.status(203).send(result.error)
+    }
+  })
 })
 
+
 app.post('/signOut', (req, res) => {
-  signOutUser(res)
+  signOutUser(res, (result) => {
+    console.log(result)
+  })
+})
+
+app.get('/readUserInfo', (req, res) => {
+  readBeats(res)
 })
 
 
