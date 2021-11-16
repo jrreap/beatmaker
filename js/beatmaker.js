@@ -7,7 +7,6 @@ const INSTRUMENTS = {
   BASS: 'bass'
 }
 
-let currentInstrument = INSTRUMENTS.SYNTH
 let sampleIndex = 1
 const beatMatrix = {}
 
@@ -125,20 +124,16 @@ function changeSample (change) {
  */
 async function playBeat () {
   const mappedMatrix = Object.values(beatMatrix)
-  const audioFiles = prepareAudioFiles(mappedMatrix)
+  const instrumentsByIndex = Object.values(INSTRUMENTS)
 
   for (let i = 0; i < 4; i++) {
-    const promises = []
-    for (const row of mappedMatrix) {
-      if (row[i] !== '') {
-        promises.push(audioFiles[row[i]].play)
+    for (let j = 0; j < mappedMatrix.length; j++) {
+      if (mappedMatrix[j][i] !== '') {
+        new Audio(`../assets/audio/${instrumentsByIndex[j]}1.wav`).play()
       }
     }
 
-    console.log(promises)
-
-    Promise.all(promises)
-    await sleep(1000)
+    await sleep(4000)
   }
 }
 
