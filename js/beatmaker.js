@@ -1,10 +1,9 @@
 const INSTRUMENTS = {
   SYNTH: 'synth',
-  PIANO: 'piano',
-  ORGAN: 'organ',
-  HORN: 'horn',
   GUITAR: 'guitar',
-  FLUTE: 'flute',
+  PIANO: 'piano',
+  HORN: 'horn',
+  DRUM: 'drum',
   BASS: 'bass'
 }
 
@@ -62,7 +61,8 @@ function logoutBtn () {
  */
 function generateWorkspace () {
   const workspace = $('#workspace')
-  const icons = ['fa-plus', 'fa-guitar', 'fa-plus', 'fa-plus', 'fa-drum', 'fa-guitar']
+  const icons = ['fa-wave-square', 'fa-guitar', 'fa-ruler-horizontal', 'fa-plus', 'fa-drum', 'fa-guitar']
+  const instrumentsByIndex = Object.values(INSTRUMENTS)
 
   // On initial load generate a nice amount of columns for the screen size
   const colLimit = Math.round(screen.width / 64)
@@ -82,7 +82,7 @@ function generateWorkspace () {
 
       beatMatrix[i][j] = ''
 
-      col.on('click', () => { setSpaceInstrument(i, j, col, currentInstrument) })
+      col.on('click', () => { setSpaceInstrument(i, j, col, instrumentsByIndex[i]) })
     }
   }
 
