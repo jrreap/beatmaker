@@ -6,6 +6,7 @@ import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/
 import { readBeats } from './firebase/fire-beats.js'
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebase/fire-app.js'
+import e from 'express';
 
 const app = express()
 const port = 8080
@@ -35,13 +36,25 @@ app.listen(port, () => {
 //////////////////
 app.post('/authenticateRoute', (req, res) => {
   let sessionUID = req.body.uid
-  sessionAuth(res, sessionUID)
+  sessionAuth(sessionUID, (result) => {
+    if (result.isLogedIn) {
+      res.status(200).send(result.userId)
+    } else {
+      res.status(203).send(result.error)
+    }
+  })
 })
 
 app.post('/createNewAccount', (req, res) => {
   let email = req.body.email
   let password = req.body.password
-  createNewUser(res, email, password)
+  createNewUser(email, password, (result) => {
+    if (result.success) {
+      res.status(200).send(result.userId)
+    } else {
+      res.status(203).send(result.error)
+    }
+  })
 })
 
 app.post('/login', (req, res) => {
@@ -58,8 +71,12 @@ app.post('/login', (req, res) => {
 
 
 app.post('/signOut', (req, res) => {
-  signOutUser(res, (result) => {
-    console.log(result)
+  signOutUser((result) => {
+    if (result.success) {
+      res.status(200).send(result.message)
+    } else {
+      res.status(500).send(result.error)
+    }
   })
 })
 
