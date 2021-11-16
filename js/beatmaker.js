@@ -1,14 +1,16 @@
 const INSTRUMENTS = {
-  SYNTH: 1,
-  PIANO: 2,
-  ORGAN: 3,
-  HORN: 4,
-  GUITAR: 5,
-  FLUTE: 6,
-  BASE: 7
+  SYNTH: 'synth',
+  PIANO: 'piano',
+  ORGAN: 'organ',
+  HORN: 'horn',
+  GUITAR: 'guitar',
+  FLUTE: 'flute',
+  BASS: 'bass'
 }
 
 let currentInstrument = INSTRUMENTS.SYNTH
+let sampleIndex = 1
+const beatMatrix = {}
 
 $(document).ready(initialize)
 
@@ -16,11 +18,43 @@ $(document).ready(initialize)
  * Called once on page load. This is where all of the initialization logic goes
  */
 function initialize () {
-  generateWorkspace()
-  bindToInstrumentButtons()
+  const sessionId = sessionStorage.getItem('uid')
+  $.ajax({
+    url: '/authenticateRoute',
+    type: 'POST',
+    data: { uid: sessionId },
+    statusCode: {
+      200: function (result) {
+        if (result) {
+          generateWorkspace()
+          bindToInstrumentButtons()
+          bindToControlButtons()
+        }
+      },
+      203: function (result) {
+        window.location.href = '/index.html'
+      }
+    }
+  })
+}
 
-  // Legacy
-  setUpButtons()
+function logoutBtn () {
+  $('#logout-btn').on('click', function (e) {
+    $.ajax({
+      url: '/signOut',
+      type: 'POST',
+      statusCode: {
+        200: function (userID) {
+          sessionStorage.removeItem('uid')
+          window.location.href = '/beatmaker.html'
+        },
+        500: function (result) {
+          console.log(result)
+          // display_alert(result.replace("Firebase: ", ''), 'danger')
+        }
+      }
+    })
+  })
 }
 
 /**
@@ -28,17 +62,31 @@ function initialize () {
  */
 function generateWorkspace () {
   const workspace = $('#workspace')
+  const icons = ['fa-plus', 'fa-guitar', 'fa-plus', 'fa-plus', 'fa-drum', 'fa-guitar']
+
+  // On initial load generate a nice amount of columns for the screen size
+  const colLimit = Math.round(screen.width / 64)
+
   for (let i = 0; i < 6; i++) {
     const row = $('<div class="row track"></div>')
     workspace.append(row)
+    beatMatrix[i] = []
 
-    for (let j = 0; j < 14; j++) {
+    // Add the column marker
+    const marker = $(`<div class="col track marker d-flex justify-content-center align-items-center"><i class="fas ${icons[i]} fa-2x"></i></div>`)
+    row.append(marker)
+
+    for (let j = 0; j < colLimit; j++) {
       const col = $(`<div id='track${i}-cell${j}' class="col track selector d-flex justify-content-center align-items-center"></div>`)
       row.append(col)
 
-      col.on('click', () => { setSpaceInstrument(col, currentInstrument) })
+      beatMatrix[i][j] = ''
+
+      col.on('click', () => { setSpaceInstrument(i, j, col, currentInstrument) })
     }
   }
+
+  console.log(beatMatrix)
 }
 
 /**
@@ -50,19 +98,67 @@ function bindToInstrumentButtons () {
   })
 }
 
-function setUpButtons () {
-  const playedAudioArray = []
-  $('.instruments').on('click', function (e) {
-    try {
-      const audioString = e.currentTarget.id
-      console.log(e.currentTarget.id)
-      playedAudioArray.push(audioString)
-      var audio = new Audio(`../assets/audio/${audioString}.wav`)
-      audio.play()
-    } catch (error) {
-      console.log(error)
+/**
+ * Adds handlers to each of the sample change buttons (next and previous)
+ */
+function bindToControlButtons () {
+  $('#sample-prev').on('click', () => changeSample(-1))
+  $('#sample-next').on('click', () => changeSample(1))
+  $('#play').on('click', playBeat)
+  $('#eraser').on('click', () => changeInstrument(''))
+}
+
+/**
+ * Changes the sample based off the passed changed value. Does accept negative values to go backwards
+ * @param {number} change The number of samples to "loop" through. Can be negative to go reverse.
+ */
+function changeSample (change) {
+  if (sampleIndex + change >= 1 && sampleIndex + change <= 6) {
+    sampleIndex += change
+
+    updateSampleDisplay()
+  }
+}
+
+/**
+ * Reads in the beat matrix and plays back the audio
+ */
+async function playBeat () {
+  const mappedMatrix = Object.values(beatMatrix)
+  const audioFiles = prepareAudioFiles(mappedMatrix)
+
+  for (let i = 0; i < 4; i++) {
+    const promises = []
+    for (const row of mappedMatrix) {
+      if (row[i] !== '') {
+        promises.push(audioFiles[row[i]].play)
+      }
     }
-  })
+
+    console.log(promises)
+
+    Promise.all(promises)
+    await sleep(1000)
+  }
+}
+
+/**
+ * Reads in the beat matrix and loads all required audio files. To save memory each file is loaded only once
+ * @param {} mappedMatrix The key value pairs of each audio file, mapped to the actual loaded file
+ * @returns {{name: HTMLMediaElement}} The mapped audio files
+ */
+function prepareAudioFiles (mappedMatrix) {
+  const audioList = {}
+
+  for (const row of mappedMatrix) {
+    for (const col of row) {
+      if (col !== '' && !(col in audioList)) {
+        audioList[col] = new Audio(`../assets/audio/${col}.wav`)
+      }
+    }
+  }
+
+  return audioList
 }
 
 /* LISTENERS and UTILITIES */
@@ -73,6 +169,9 @@ function setUpButtons () {
 function changeInstrument (instrument) {
   console.log('Instrument changed to ' + instrument)
   currentInstrument = instrument
+  sampleIndex = 1
+
+  updateSampleDisplay()
 }
 
 /**
@@ -80,8 +179,36 @@ function changeInstrument (instrument) {
  * @param {JQuery<HTMLElement>} element The HTMLElement of the track cell selected
  * @param {number} instrument The instrument code
  */
-function setSpaceInstrument (element, instrument) {
+function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
   element.text('')
   element.append(instrument)
+
+  if (instrument !== '') {
+    beatMatrix[row][col] = instrument + sampleIndex
+  } else {
+    beatMatrix[row][col] = instrument // Eraser mode
+  }
+
+  console.log(beatMatrix)
+}
+
+/**
+ * Updates the sample display to match the current selected sampleIndex
+ */
+function updateSampleDisplay () {
+  const sample = $('#sample-index')
+  sample.text('')
+  sample.append(sampleIndex)
+}
+
+/**
+ * Utility function that pauses the runtime to sync up beats
+ * @param {number} delay The time to wait in miliseconds
+ * @returns {Promise}
+ */
+function sleep (delay) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay)
+  })
 }

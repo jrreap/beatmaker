@@ -1,12 +1,29 @@
 $(document).ready(function () {
   $('#submit-btn').on('click', function (e) {
     e.preventDefault()
-    const username = $('#username-input').val()
+    const email = $('#email-input').val()
     const password = $('#password-input').val()
-
-    console.log('Username: ' + username)
-    console.log('Password: ' + password)
-    window.location.href = 'beatmaker.html'
+    $("#liveAlertPlaceholder").empty();
+    $.ajax({
+      url: '/login',
+      type: 'POST',
+      data: { "email": email, "password": password },
+      statusCode: {
+        200: function (userID) {
+          sessionStorage.setItem("uid", userID);
+          window.location.href = '/beatmaker.html'
+        },
+        203: function (result) {
+          display_alert(result.replace("Firebase: ", ''), 'danger')
+        }
+      }
+    });
     return false
   })
 })
+
+function display_alert(message, type) {
+  var wrapper = document.createElement('div')
+  wrapper.innerHTML = '<div id="alertDiv" class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '</div>'
+  $("#liveAlertPlaceholder").append(wrapper)
+}
