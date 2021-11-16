@@ -18,9 +18,43 @@ $(document).ready(initialize)
  * Called once on page load. This is where all of the initialization logic goes
  */
 function initialize () {
-  generateWorkspace()
-  bindToInstrumentButtons()
-  bindToControlButtons()
+  const sessionId = sessionStorage.getItem('uid')
+  $.ajax({
+    url: '/authenticateRoute',
+    type: 'POST',
+    data: { uid: sessionId },
+    statusCode: {
+      200: function (result) {
+        if (result) {
+          generateWorkspace()
+          bindToInstrumentButtons()
+          bindToControlButtons()
+        }
+      },
+      203: function (result) {
+        window.location.href = '/index.html'
+      }
+    }
+  })
+}
+
+function logoutBtn () {
+  $('#logout-btn').on('click', function (e) {
+    $.ajax({
+      url: '/signOut',
+      type: 'POST',
+      statusCode: {
+        200: function (userID) {
+          sessionStorage.removeItem('uid')
+          window.location.href = '/beatmaker.html'
+        },
+        500: function (result) {
+          console.log(result)
+          // display_alert(result.replace("Firebase: ", ''), 'danger')
+        }
+      }
+    })
+  })
 }
 
 /**
