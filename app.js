@@ -1,7 +1,7 @@
 import express from 'express'
 import { dirname, join } from 'path'
-import { fileURLToPath } from 'url';
-import bodyParser from 'body-parser';
+import { fileURLToPath } from 'url'
+import bodyParser from 'body-parser'
 import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
 import { writeBeats, readUsersBeats, readAllBeats } from './firebase/fire-beats.js'
 import { initializeApp } from "firebase/app";
@@ -11,12 +11,12 @@ import { resourceLimits } from 'worker_threads';
 
 const app = express()
 const port = 8080
-let fireApp = initializeApp(firebaseConfig)
+const fireApp = initializeApp(firebaseConfig)
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(function (req, res, next) {
@@ -27,14 +27,13 @@ app.use(function (req, res, next) {
 
 app.use('/', express.static(join(__dirname, '')))
 
-
 app.listen(port, () => {
   console.log(`Server running on port ${port}...`)
 })
 
-///////////////////
+/// ////////////////
 // Firebase Auth
-//////////////////
+/// ///////////////
 app.post('/authenticateRoute', (req, res) => {
   let sessionUID = req.body.uid
   sessionAuth(sessionUID, (result) => {
@@ -69,6 +68,7 @@ app.post('/login', (req, res) => {
     }
   })
 })
+
 
 app.post('/signOut', (req, res) => {
   signOutUser((result) => {
@@ -120,5 +120,6 @@ app.get('/getAllBeats', (req, res) => {
   })
 })
 
-
-
+app.get('/readUserInfo', (req, res) => {
+  readBeats(res)
+})
