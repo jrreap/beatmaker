@@ -1,10 +1,9 @@
 const INSTRUMENTS = {
   SYNTH: 'synth',
-  PIANO: 'piano',
-  ORGAN: 'organ',
-  HORN: 'horn',
   GUITAR: 'guitar',
-  FLUTE: 'flute',
+  PIANO: 'piano',
+  HORN: 'horn',
+  DRUM: 'drum',
   BASS: 'bass'
 }
 
@@ -17,7 +16,7 @@ $(document).ready(initialize)
 /**
  * Called once on page load. This is where all of the initialization logic goes
  */
-function initialize () {
+function initialize() {
   const sessionId = sessionStorage.getItem('uid')
   $.ajax({
     url: '/authenticateRoute',
@@ -38,7 +37,24 @@ function initialize () {
   })
 }
 
-function logoutBtn () {
+function tempWrite() {
+  $.ajax({
+    url: '/writeBeat',
+    type: 'PUT',
+    statusCode: {
+      200: function (userID) {
+        sessionStorage.removeItem("uid");
+        window.location.href = '/beatmaker.html'
+      },
+      500: function (result) {
+        console.log(result)
+        // display_alert(result.replace("Firebase: ", ''), 'danger')
+      }
+    }
+  });
+}
+
+function logoutBtn() {
   $('#logout-btn').on('click', function (e) {
     $.ajax({
       url: '/signOut',
@@ -60,9 +76,10 @@ function logoutBtn () {
 /**
  * Generates the track rows and columns dynamically instead of duplicating the HTML statically
  */
-function generateWorkspace () {
+function generateWorkspace() {
   const workspace = $('#workspace')
-  const icons = ['fa-plus', 'fa-guitar', 'fa-plus', 'fa-plus', 'fa-drum', 'fa-guitar']
+  const icons = ['fa-wave-square', 'fa-guitar', 'fa-ruler-horizontal', 'fa-plus', 'fa-drum', 'fa-guitar']
+  const instrumentsByIndex = Object.values(INSTRUMENTS)
 
   // On initial load generate a nice amount of columns for the screen size
   const colLimit = Math.round(screen.width / 64)
@@ -82,7 +99,7 @@ function generateWorkspace () {
 
       beatMatrix[i][j] = ''
 
-      col.on('click', () => { setSpaceInstrument(i, j, col, currentInstrument) })
+      col.on('click', () => { setSpaceInstrument(i, j, col, instrumentsByIndex[i]) })
     }
   }
 
@@ -92,7 +109,7 @@ function generateWorkspace () {
 /**
  * Adds handlers to each of the instrument selection buttons dynamically
  */
-function bindToInstrumentButtons () {
+function bindToInstrumentButtons() {
   $('.instrument').on('click', function (e) {
     changeInstrument(e.currentTarget.id)
   })
@@ -101,7 +118,7 @@ function bindToInstrumentButtons () {
 /**
  * Adds handlers to each of the sample change buttons (next and previous)
  */
-function bindToControlButtons () {
+function bindToControlButtons() {
   $('#sample-prev').on('click', () => changeSample(-1))
   $('#sample-next').on('click', () => changeSample(1))
   $('#play').on('click', playBeat)
@@ -112,7 +129,7 @@ function bindToControlButtons () {
  * Changes the sample based off the passed changed value. Does accept negative values to go backwards
  * @param {number} change The number of samples to "loop" through. Can be negative to go reverse.
  */
-function changeSample (change) {
+function changeSample(change) {
   if (sampleIndex + change >= 1 && sampleIndex + change <= 6) {
     sampleIndex += change
 
@@ -123,7 +140,7 @@ function changeSample (change) {
 /**
  * Reads in the beat matrix and plays back the audio
  */
-async function playBeat () {
+async function playBeat() {
   const mappedMatrix = Object.values(beatMatrix)
   const audioFiles = prepareAudioFiles(mappedMatrix)
 
@@ -147,7 +164,7 @@ async function playBeat () {
  * @param {} mappedMatrix The key value pairs of each audio file, mapped to the actual loaded file
  * @returns {{name: HTMLMediaElement}} The mapped audio files
  */
-function prepareAudioFiles (mappedMatrix) {
+function prepareAudioFiles(mappedMatrix) {
   const audioList = {}
 
   for (const row of mappedMatrix) {
@@ -166,7 +183,7 @@ function prepareAudioFiles (mappedMatrix) {
  * Changes the currently selected instrument to the passed param
  * @param {number} instrument The instrument code to select
  */
-function changeInstrument (instrument) {
+function changeInstrument(instrument) {
   console.log('Instrument changed to ' + instrument)
   currentInstrument = instrument
   sampleIndex = 1
@@ -179,7 +196,7 @@ function changeInstrument (instrument) {
  * @param {JQuery<HTMLElement>} element The HTMLElement of the track cell selected
  * @param {number} instrument The instrument code
  */
-function setSpaceInstrument (row, col, element, instrument) {
+function setSpaceInstrument(row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
   element.text('')
   element.append(instrument)
@@ -196,7 +213,7 @@ function setSpaceInstrument (row, col, element, instrument) {
 /**
  * Updates the sample display to match the current selected sampleIndex
  */
-function updateSampleDisplay () {
+function updateSampleDisplay() {
   const sample = $('#sample-index')
   sample.text('')
   sample.append(sampleIndex)
@@ -207,7 +224,7 @@ function updateSampleDisplay () {
  * @param {number} delay The time to wait in miliseconds
  * @returns {Promise}
  */
-function sleep (delay) {
+function sleep(delay) {
   return new Promise((resolve) => {
     setTimeout(resolve, delay)
   })

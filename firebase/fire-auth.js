@@ -4,7 +4,7 @@ import { getFirestore, doc, setDoc } from "firebase/firestore"
 
 
 
-function createNewUser(res, email, password) {
+function createNewUser(email, password, callback) {
     const auth = getAuth();
     const db = getFirestore();
     createUserWithEmailAndPassword(auth, email, password)
@@ -14,52 +14,54 @@ function createNewUser(res, email, password) {
                 email: email,
                 beats: []
             });
-            res.status(200).send(userId)
+            callback({ "success": true, "userId": userId })
+
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            res.status(203).send(errorMessage)
+            callback({ "success": false, "error": "Could Not Create Account" })
         });
 }
 
-function signInUser(res, email, password) {
+function signInUser(email, password, callback) {
     const auth = getAuth();
+    let returnValue = []
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const userId = userCredential.user.uid
-            res.status(200).send(userId)
+            callback({ "success": true, "userId": userId })
         })
         .catch((error) => {
             const errorCode = error.code;
-            const errorMessage = error.message;
-            res.status(203).send("Sending Here" + errorMessage)
+            callback({ "success": false, "error": "Incorrect Login" })
+
         });
 }
 
-function sessionAuth(res, uid) {
+function sessionAuth(uid, callback) {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const userID = user.uid;
             if (uid == userID) {
-                res.status(200).send(true)
+                callback({ "isLogedIn": true, "userId": userID })
             } else {
-                res.status(203).send(false)
+                callback({ "isLogedIn": false, "error": "Not Logged In" })
             }
         } else {
-            res.status(203).send(false)
+            callback({ "isLogedIn": false, "error": "Not Logged In" })
         }
     });
 
 }
 
-function signOutUser(res) {
+function signOutUser(callback) {
     const auth = getAuth();
     signOut(auth).then(() => {
-        res.status(200).send("Logged Out")
+        callback({ "success": true, "message": "Logged Out" })
     }).catch((error) => {
-        res.status(500).send(error)
+        callback({ "success": false, "error": "Could Not Log Out" })
     });
 }
 
