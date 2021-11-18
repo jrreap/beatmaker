@@ -1,40 +1,60 @@
-import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore"
+import { getFirestore, doc, setDoc, onSnapshot, addDoc, collection } from "firebase/firestore"
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-function readAllBeats(res) {
+function readAllBeats(callback) {
     const db = getFirestore();
     const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            onSnapshot(doc(db, "beats"), (doc) => {
+                callback({ "success": true, "data": doc.data() })
+            });
+        } else {
+            callback({ "success": false, "data": "Cannot Access Users Beats" })
+        }
+    });
 }
 
-
-function readBeats(res) {
+function readUsersBeats(callback) {
     const db = getFirestore();
     const auth = getAuth();
-
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const userID = user.uid;
-            console.log(userID)
-            const unsub = onSnapshot(doc(db, "users", userID), (doc) => {
-                console.log("Current data: ", doc.data());
-                // res.status(200).send(doc.data())
+            onSnapshot(doc(db, "users", userID), (doc) => {
+                callback({ "success": true, "data": doc.data() })
             });
-            console.log(unsub)
-
         } else {
-            res.status(203).send("Cannot Access Users Beats")
+            callback({ "success": false, "data": "Cannot Access Users Beats" })
         }
     });
-    // const unsub = onSnapshot(doc(db, "users", "SF"), (doc) => {
-    //     console.log("Current data: ", doc.data());
-    // });
-
-
 }
 
-function writeBeats() {
+function writeBeats(Author, Title, Genre, Description, Beat, callback) {
     const db = getFirestore();
-
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const userID = user.uid;
+            addDoc(collection(db, "users", userID, "beats"), {
+                Author: Author,
+                Title: Title,
+                Genre: Genre,
+                Description: Description,
+                Beat: Beat
+            });
+            addDoc(collection(db, "beats"), {
+                Author: Author,
+                Title: Title,
+                Genre: Genre,
+                Description: Description,
+                Beat: Beat
+            });
+            callback({ "success": true })
+        } else {
+            callback({ "success": false, "data": "Beat was not Uploaded" })
+        }
+    });
 }
 
-export { readBeats, writeBeats }
+export { readUsersBeats, readAllBeats, writeBeats }
