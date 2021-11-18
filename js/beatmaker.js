@@ -124,17 +124,9 @@ function changeSample (change) {
  */
 async function playBeat () {
   const mappedMatrix = Object.values(beatMatrix)
-  const instrumentsByIndex = Object.values(INSTRUMENTS)
 
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < mappedMatrix.length; j++) {
-      if (mappedMatrix[j][i] !== '') {
-        new Audio(`../assets/audio/${instrumentsByIndex[j]}1.wav`).play()
-      }
-    }
-
-    await sleep(4000)
-  }
+  const soundBoard = new SoundBoard(mappedMatrix)
+  soundBoard.play(500)
 }
 
 /**
@@ -206,4 +198,48 @@ function sleep (delay) {
   return new Promise((resolve) => {
     setTimeout(resolve, delay)
   })
+}
+
+function SoundBoard (mappedMatrix) {
+  const instrumentsByIndex = Object.values(INSTRUMENTS)
+
+  this.board = []
+
+  for (let i = 0; i < 4; i++) {
+    this.board.push(new Mix())
+    for (let j = 0; j < mappedMatrix.length; j++) {
+      if (mappedMatrix[j][i] !== '') {
+        this.board[i].add(`../assets/audio/${instrumentsByIndex[j]}1.wav`)
+      }
+    }
+  }
+}
+
+SoundBoard.prototype.play = async function (delay) {
+  for (let i = 0; i < 4; i++) {
+    this.board[i].play()
+    await sleep(delay)
+  }
+}
+
+function Mix () {
+  this.channels = []
+}
+
+Mix.prototype.add = function (audioSrc) {
+  this.channels.push(new Channel(audioSrc))
+}
+
+Mix.prototype.play = async function () {
+  for (const channel of this.channels) {
+    channel.play()
+  }
+}
+
+function Channel (src) {
+  this.audio = new Audio(src)
+}
+
+Channel.prototype.play = function () {
+  this.audio.play()
 }
