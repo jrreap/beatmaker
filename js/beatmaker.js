@@ -7,16 +7,17 @@ const INSTRUMENTS = {
   BASS: 'bass'
 }
 
-let currentInstrument = INSTRUMENTS.SYNTH
 let sampleIndex = 1
 const beatMatrix = {}
+let erasing = false
+const beatLength = Math.round(screen.width / 64) - 1
 
 $(document).ready(initialize)
 
 /**
  * Called once on page load. This is where all of the initialization logic goes
  */
-function initialize() {
+function initialize () {
   const sessionId = sessionStorage.getItem('uid')
   $.ajax({
     url: '/authenticateRoute',
@@ -38,13 +39,13 @@ function initialize() {
   })
 }
 
-function tempWrite() {
+function tempWrite () {
   $.ajax({
     url: '/writeBeat',
     type: 'PUT',
     statusCode: {
       200: function (userID) {
-        sessionStorage.removeItem("uid");
+        sessionStorage.removeItem('uid')
         window.location.href = '/beatmaker.html'
       },
       500: function (result) {
@@ -52,10 +53,10 @@ function tempWrite() {
         // display_alert(result.replace("Firebase: ", ''), 'danger')
       }
     }
-  });
+  })
 }
 
-function logoutBtn() {
+function logoutBtn () {
   $('#logout-btn').on('click', function (e) {
     $.ajax({
       url: '/signOut',
@@ -77,13 +78,13 @@ function logoutBtn() {
 /**
  * Generates the track rows and columns dynamically instead of duplicating the HTML statically
  */
-function generateWorkspace() {
+function generateWorkspace () {
   const workspace = $('#workspace')
   const icons = ['fa-wave-square', 'fa-guitar', 'fa-ruler-horizontal', 'fa-plus', 'fa-drum', 'fa-guitar']
   const instrumentsByIndex = Object.values(INSTRUMENTS)
 
   // On initial load generate a nice amount of columns for the screen size
-  const colLimit = Math.round(screen.width / 64)
+  const colLimit = beatLength + 1
 
   for (let i = 0; i < 6; i++) {
     const row = $('<div class="row track"></div>')
@@ -110,7 +111,7 @@ function generateWorkspace() {
 /**
  * Adds handlers to each of the instrument selection buttons dynamically
  */
-function bindToInstrumentButtons() {
+function bindToInstrumentButtons () {
   $('.instrument').on('click', function (e) {
     changeInstrument(e.currentTarget.id)
   })
@@ -119,18 +120,20 @@ function bindToInstrumentButtons() {
 /**
  * Adds handlers to each of the sample change buttons (next and previous)
  */
-function bindToControlButtons() {
+function bindToControlButtons () {
   $('#sample-prev').on('click', () => changeSample(-1))
   $('#sample-next').on('click', () => changeSample(1))
   $('#play').on('click', playBeat)
-  $('#eraser').on('click', () => changeInstrument(''))
+  $('#eraser').on('click', () => {
+    erasing = !erasing
+  })
 }
 
 /**
  * Changes the sample based off the passed changed value. Does accept negative values to go backwards
  * @param {number} change The number of samples to "loop" through. Can be negative to go reverse.
  */
-function changeSample(change) {
+function changeSample (change) {
   if (sampleIndex + change >= 1 && sampleIndex + change <= 6) {
     sampleIndex += change
 
@@ -141,42 +144,11 @@ function changeSample(change) {
 /**
  * Reads in the beat matrix and plays back the audio
  */
-async function playBeat() {
+async function playBeat () {
   const mappedMatrix = Object.values(beatMatrix)
-  const audioFiles = prepareAudioFiles(mappedMatrix)
 
-  for (let i = 0; i < 4; i++) {
-    const promises = []
-    for (const row of mappedMatrix) {
-      if (row[i] !== '') {
-        promises.push(audioFiles[row[i]].play)
-      }
-    }
-
-    console.log(promises)
-
-    Promise.all(promises)
-    await sleep(1000)
-  }
-}
-
-/**
- * Reads in the beat matrix and loads all required audio files. To save memory each file is loaded only once
- * @param {} mappedMatrix The key value pairs of each audio file, mapped to the actual loaded file
- * @returns {{name: HTMLMediaElement}} The mapped audio files
- */
-function prepareAudioFiles(mappedMatrix) {
-  const audioList = {}
-
-  for (const row of mappedMatrix) {
-    for (const col of row) {
-      if (col !== '' && !(col in audioList)) {
-        audioList[col] = new Audio(`../assets/audio/${col}.wav`)
-      }
-    }
-  }
-
-  return audioList
+  const soundBoard = new SoundBoard(mappedMatrix)
+  soundBoard.play(500)
 }
 
 /* LISTENERS and UTILITIES */
@@ -184,7 +156,7 @@ function prepareAudioFiles(mappedMatrix) {
  * Changes the currently selected instrument to the passed param
  * @param {number} instrument The instrument code to select
  */
-function changeInstrument(instrument) {
+function changeInstrument (instrument) {
   console.log('Instrument changed to ' + instrument)
   currentInstrument = instrument
   sampleIndex = 1
@@ -197,15 +169,15 @@ function changeInstrument(instrument) {
  * @param {JQuery<HTMLElement>} element The HTMLElement of the track cell selected
  * @param {number} instrument The instrument code
  */
-function setSpaceInstrument(row, col, element, instrument) {
+function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
   element.text('')
-  element.append(instrument)
 
-  if (instrument !== '') {
+  if (!erasing) {
+    element.append(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
-    beatMatrix[row][col] = instrument // Eraser mode
+    beatMatrix[row][col] = '' // Eraser mode
   }
 
   console.log(beatMatrix)
@@ -214,7 +186,7 @@ function setSpaceInstrument(row, col, element, instrument) {
 /**
  * Updates the sample display to match the current selected sampleIndex
  */
-function updateSampleDisplay() {
+function updateSampleDisplay () {
   const sample = $('#sample-index')
   sample.text('')
   sample.append(sampleIndex)
@@ -225,8 +197,52 @@ function updateSampleDisplay() {
  * @param {number} delay The time to wait in miliseconds
  * @returns {Promise}
  */
-function sleep(delay) {
+function sleep (delay) {
   return new Promise((resolve) => {
     setTimeout(resolve, delay)
   })
+}
+
+function SoundBoard (mappedMatrix) {
+  const instrumentsByIndex = Object.values(INSTRUMENTS)
+
+  this.board = []
+
+  for (let i = 0; i < beatLength; i++) {
+    this.board.push(new Mix())
+    for (let j = 0; j < mappedMatrix.length; j++) {
+      if (mappedMatrix[j][i] !== '') {
+        this.board[i].add(`../assets/audio/${instrumentsByIndex[j]}1.wav`)
+      }
+    }
+  }
+}
+
+SoundBoard.prototype.play = async function (delay) {
+  for (let i = 0; i < 4; i++) {
+    this.board[i].play()
+    await sleep(delay)
+  }
+}
+
+function Mix () {
+  this.channels = []
+}
+
+Mix.prototype.add = function (audioSrc) {
+  this.channels.push(new Channel(audioSrc))
+}
+
+Mix.prototype.play = async function () {
+  for (const channel of this.channels) {
+    channel.play()
+  }
+}
+
+function Channel (src) {
+  this.audio = new Audio(src)
+}
+
+Channel.prototype.play = function () {
+  this.audio.play()
 }
