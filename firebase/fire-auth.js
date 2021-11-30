@@ -4,7 +4,7 @@ import { getFirestore, doc, setDoc } from "firebase/firestore"
 
 
 
-function createNewUser(email, password, callback) {
+function createNewUser(email, password, name, callback) {
     const auth = getAuth();
     const db = getFirestore();
     createUserWithEmailAndPassword(auth, email, password)
@@ -12,6 +12,7 @@ function createNewUser(email, password, callback) {
             const userId = userCredential.user.uid
             setDoc(doc(db, "users", userId), {
                 email: email,
+                name: name,
                 beats: []
             });
             callback({ "success": true, "userId": userId })
@@ -26,7 +27,6 @@ function createNewUser(email, password, callback) {
 
 function signInUser(email, password, callback) {
     const auth = getAuth();
-    let returnValue = []
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const userId = userCredential.user.uid

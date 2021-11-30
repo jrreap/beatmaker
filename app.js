@@ -48,7 +48,8 @@ app.post('/authenticateRoute', (req, res) => {
 app.post('/createNewAccount', (req, res) => {
   let email = req.body.email
   let password = req.body.password
-  createNewUser(email, password, (result) => {
+  let name = req.body.name
+  createNewUser(email, password, name, (result) => {
     if (result.success) {
       res.status(200).send(result.userId)
     } else {
@@ -99,6 +100,10 @@ app.put('/writeBeat', (req, res) => {
   })
 })
 
+app.post('/loadBeat', (req, res) => {
+  let beat
+})
+
 
 app.get('/readUserInfo', (req, res) => {
   readUsersBeats((result) => {
@@ -120,6 +125,3 @@ app.get('/getAllBeats', (req, res) => {
   })
 })
 
-app.get('/readUserInfo', (req, res) => {
-  readBeats(res)
-})
