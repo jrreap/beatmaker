@@ -28,6 +28,7 @@ function initialize() {
           generateWorkspace()
           bindToInstrumentButtons()
           bindToControlButtons()
+          logoutBtn()
         }
       },
       203: function (result) {
