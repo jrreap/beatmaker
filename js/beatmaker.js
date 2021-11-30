@@ -9,6 +9,7 @@ const INSTRUMENTS = {
 
 let sampleIndex = 1
 const beatMatrix = {}
+let erasing = false
 
 $(document).ready(initialize)
 
@@ -104,7 +105,9 @@ function bindToControlButtons () {
   $('#sample-prev').on('click', () => changeSample(-1))
   $('#sample-next').on('click', () => changeSample(1))
   $('#play').on('click', playBeat)
-  $('#eraser').on('click', () => changeInstrument(''))
+  $('#eraser').on('click', () => {
+    erasing = !erasing
+  })
 }
 
 /**
@@ -129,25 +132,6 @@ async function playBeat () {
   soundBoard.play(500)
 }
 
-/**
- * Reads in the beat matrix and loads all required audio files. To save memory each file is loaded only once
- * @param {} mappedMatrix The key value pairs of each audio file, mapped to the actual loaded file
- * @returns {{name: HTMLMediaElement}} The mapped audio files
- */
-function prepareAudioFiles (mappedMatrix) {
-  const audioList = {}
-
-  for (const row of mappedMatrix) {
-    for (const col of row) {
-      if (col !== '' && !(col in audioList)) {
-        audioList[col] = new Audio(`../assets/audio/${col}.wav`)
-      }
-    }
-  }
-
-  return audioList
-}
-
 /* LISTENERS and UTILITIES */
 /**
  * Changes the currently selected instrument to the passed param
@@ -169,12 +153,12 @@ function changeInstrument (instrument) {
 function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
   element.text('')
-  element.append(instrument)
 
-  if (instrument !== '') {
+  if (!erasing) {
+    element.append(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
-    beatMatrix[row][col] = instrument // Eraser mode
+    beatMatrix[row][col] = '' // Eraser mode
   }
 
   console.log(beatMatrix)
