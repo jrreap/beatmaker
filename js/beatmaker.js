@@ -29,10 +29,28 @@ function initialize () {
           generateWorkspace()
           bindToInstrumentButtons()
           bindToControlButtons()
+          logoutBtn()
         }
       },
       203: function (result) {
         window.location.href = '/index.html'
+      }
+    }
+  })
+}
+
+function tempWrite () {
+  $.ajax({
+    url: '/writeBeat',
+    type: 'PUT',
+    statusCode: {
+      200: function (userID) {
+        sessionStorage.removeItem('uid')
+        window.location.href = '/beatmaker.html'
+      },
+      500: function (result) {
+        console.log(result)
+        // display_alert(result.replace("Firebase: ", ''), 'danger')
       }
     }
   })
