@@ -10,6 +10,7 @@ const INSTRUMENTS = {
 let sampleIndex = 1
 const beatMatrix = {}
 let erasing = false
+const beatLength = Math.round(screen.width / 64) - 1
 
 $(document).ready(initialize)
 
@@ -65,7 +66,7 @@ function generateWorkspace () {
   const instrumentsByIndex = Object.values(INSTRUMENTS)
 
   // On initial load generate a nice amount of columns for the screen size
-  const colLimit = Math.round(screen.width / 64)
+  const colLimit = beatLength + 1
 
   for (let i = 0; i < 6; i++) {
     const row = $('<div class="row track"></div>')
@@ -189,7 +190,7 @@ function SoundBoard (mappedMatrix) {
 
   this.board = []
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < beatLength; i++) {
     this.board.push(new Mix())
     for (let j = 0; j < mappedMatrix.length; j++) {
       if (mappedMatrix[j][i] !== '') {
