@@ -113,7 +113,7 @@ app.get('/readUserInfo', (req, res) => {
 app.get('/getAllBeats', (req, res) => {
   readAllBeats((result) => {
     if (result.success) {
-      res.status(200).send(res.data)
+      res.status(200).send(result.data)
     } else {
       res.status(203).send([])
     }

@@ -11,7 +11,7 @@ function initialize() {
         statusCode: {
             200: function (result) {
                 if (result) {
-                    readUsersBeats()
+                    readUsersInfo()
                 }
             },
             203: function (result) {
@@ -21,14 +21,13 @@ function initialize() {
     });
 }
 
-function readUsersBeats() {
-    console.log("got Here")
+function readUsersInfo() {
     $.ajax({
         url: '/readUserInfo',
         type: 'GET',
         statusCode: {
-            200: function (userID) {
-                console.log(userID)
+            200: function (userInfo) {
+                console.log(userInfo) // Donte here is the object that has the user info
             },
             203: function (result) {
                 console.log(result)

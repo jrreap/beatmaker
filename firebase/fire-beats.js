@@ -6,8 +6,13 @@ function readAllBeats(callback) {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            onSnapshot(doc(db, "beats"), (doc) => {
-                callback({ "success": true, "data": doc.data() })
+            onSnapshot(collection(db, "beats"), (querySnapshot) => {
+                const beats = [];
+                querySnapshot.forEach((doc) => {
+                    beats.push(doc.data());
+                });
+                callback({ "success": true, "data": beats })
+
             });
         } else {
             callback({ "success": false, "data": "Cannot Access Users Beats" })
