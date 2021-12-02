@@ -7,7 +7,7 @@ const INSTRUMENTS = {
   BASS: 'bass'
 }
 
-let sampleIndex = 1
+const sampleIndex = 1
 const beatMatrix = {}
 let erasing = false
 const beatLength = Math.round(screen.width / 64) - 1
@@ -36,7 +36,6 @@ $(document).ready(() => {
  */
 function initialize () {
   generateWorkspace()
-  bindToInstrumentButtons()
   bindToControlButtons()
   logoutBtn()
 }
@@ -113,36 +112,13 @@ function generateWorkspace () {
 }
 
 /**
- * Adds handlers to each of the instrument selection buttons dynamically
- */
-function bindToInstrumentButtons () {
-  $('.instrument').on('click', function (e) {
-    changeInstrument(e.currentTarget.id)
-  })
-}
-
-/**
  * Adds handlers to each of the sample change buttons (next and previous)
  */
 function bindToControlButtons () {
-  $('#sample-prev').on('click', () => changeSample(-1))
-  $('#sample-next').on('click', () => changeSample(1))
   $('#play').on('click', playBeat)
   $('#eraser').on('click', () => {
     erasing = !erasing
   })
-}
-
-/**
- * Changes the sample based off the passed changed value. Does accept negative values to go backwards
- * @param {number} change The number of samples to "loop" through. Can be negative to go reverse.
- */
-function changeSample (change) {
-  if (sampleIndex + change >= 1 && sampleIndex + change <= 6) {
-    sampleIndex += change
-
-    updateSampleDisplay()
-  }
 }
 
 /**
@@ -156,18 +132,6 @@ async function playBeat () {
 }
 
 /* LISTENERS and UTILITIES */
-/**
- * Changes the currently selected instrument to the passed param
- * @param {number} instrument The instrument code to select
- */
-function changeInstrument (instrument) {
-  console.log('Instrument changed to ' + instrument)
-  currentInstrument = instrument
-  sampleIndex = 1
-
-  updateSampleDisplay()
-}
-
 /**
  * Sets the clicked track space to play the specified instrument
  * @param {JQuery<HTMLElement>} element The HTMLElement of the track cell selected
@@ -188,15 +152,6 @@ function setSpaceInstrument (row, col, element, instrument) {
 }
 
 /**
- * Updates the sample display to match the current selected sampleIndex
- */
-function updateSampleDisplay () {
-  const sample = $('#sample-index')
-  sample.text('')
-  sample.append(sampleIndex)
-}
-
-/**
  * Utility function that pauses the runtime to sync up beats
  * @param {number} delay The time to wait in miliseconds
  * @returns {Promise}
@@ -214,6 +169,10 @@ function enableTooltips () {
   $('[data-toggle="tooltip"]').tooltip()
 }
 
+/**
+ * A wrapper function that provides sound control and syncing functionality to the BeatMaker
+ * @param {{}} mappedMatrix
+ */
 function SoundBoard (mappedMatrix) {
   const instrumentsByIndex = Object.values(INSTRUMENTS)
 
@@ -229,7 +188,12 @@ function SoundBoard (mappedMatrix) {
   }
 }
 
-SoundBoard.prototype.play = async function (delay) {
+/**
+ * Plays the currently configured beat with the passed delay
+ * @param {number} delay
+ * @async
+ */
+SoundBoard.prototype.play = async function (delay = 500) {
   for (let i = 0; i < 4; i++) {
     this.board[i].play()
     await sleep(delay)
