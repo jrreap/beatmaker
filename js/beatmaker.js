@@ -7,9 +7,10 @@ const INSTRUMENTS = {
   BASS: 'bass'
 }
 
-let currentInstrument = INSTRUMENTS.SYNTH
 let sampleIndex = 1
 const beatMatrix = {}
+let erasing = false
+const beatLength = Math.round(screen.width / 64) - 1
 
 $(document).ready(initialize)
 
@@ -67,7 +68,7 @@ function generateWorkspace() {
   const instrumentsByIndex = Object.values(INSTRUMENTS)
 
   // On initial load generate a nice amount of columns for the screen size
-  const colLimit = Math.round(screen.width / 64)
+  const colLimit = beatLength + 1
 
   for (let i = 0; i < 6; i++) {
     const row = $('<div class="row track"></div>')
@@ -107,7 +108,9 @@ function bindToControlButtons() {
   $('#sample-prev').on('click', () => changeSample(-1))
   $('#sample-next').on('click', () => changeSample(1))
   $('#play').on('click', playBeat)
-  $('#eraser').on('click', () => changeInstrument(''))
+  $('#eraser').on('click', () => {
+    erasing = !erasing
+  })
 }
 
 /**
@@ -127,40 +130,9 @@ function changeSample(change) {
  */
 async function playBeat() {
   const mappedMatrix = Object.values(beatMatrix)
-  const audioFiles = prepareAudioFiles(mappedMatrix)
 
-  for (let i = 0; i < 4; i++) {
-    const promises = []
-    for (const row of mappedMatrix) {
-      if (row[i] !== '') {
-        promises.push(audioFiles[row[i]].play)
-      }
-    }
-
-    console.log(promises)
-
-    Promise.all(promises)
-    await sleep(1000)
-  }
-}
-
-/**
- * Reads in the beat matrix and loads all required audio files. To save memory each file is loaded only once
- * @param {} mappedMatrix The key value pairs of each audio file, mapped to the actual loaded file
- * @returns {{name: HTMLMediaElement}} The mapped audio files
- */
-function prepareAudioFiles(mappedMatrix) {
-  const audioList = {}
-
-  for (const row of mappedMatrix) {
-    for (const col of row) {
-      if (col !== '' && !(col in audioList)) {
-        audioList[col] = new Audio(`../assets/audio/${col}.wav`)
-      }
-    }
-  }
-
-  return audioList
+  const soundBoard = new SoundBoard(mappedMatrix)
+  soundBoard.play(500)
 }
 
 /* LISTENERS and UTILITIES */
@@ -184,12 +156,12 @@ function changeInstrument(instrument) {
 function setSpaceInstrument(row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
   element.text('')
-  element.append(instrument)
 
-  if (instrument !== '') {
+  if (!erasing) {
+    element.append(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
-    beatMatrix[row][col] = instrument // Eraser mode
+    beatMatrix[row][col] = '' // Eraser mode
   }
 
   console.log(beatMatrix)
@@ -213,4 +185,48 @@ function sleep(delay) {
   return new Promise((resolve) => {
     setTimeout(resolve, delay)
   })
+}
+
+function SoundBoard(mappedMatrix) {
+  const instrumentsByIndex = Object.values(INSTRUMENTS)
+
+  this.board = []
+
+  for (let i = 0; i < beatLength; i++) {
+    this.board.push(new Mix())
+    for (let j = 0; j < mappedMatrix.length; j++) {
+      if (mappedMatrix[j][i] !== '') {
+        this.board[i].add(`../assets/audio/${instrumentsByIndex[j]}1.wav`)
+      }
+    }
+  }
+}
+
+SoundBoard.prototype.play = async function (delay) {
+  for (let i = 0; i < 4; i++) {
+    this.board[i].play()
+    await sleep(delay)
+  }
+}
+
+function Mix() {
+  this.channels = []
+}
+
+Mix.prototype.add = function (audioSrc) {
+  this.channels.push(new Channel(audioSrc))
+}
+
+Mix.prototype.play = async function () {
+  for (const channel of this.channels) {
+    channel.play()
+  }
+}
+
+function Channel(src) {
+  this.audio = new Audio(src)
+}
+
+Channel.prototype.play = function () {
+  this.audio.play()
 }
