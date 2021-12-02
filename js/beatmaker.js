@@ -119,6 +119,32 @@ function bindToControlButtons () {
   $('#eraser').on('click', () => {
     erasing = !erasing
   })
+  $('#save').on('click', saveBeat)
+}
+
+async function saveBeat () {
+  try {
+    const res = await fetch('/writeBeat', {
+      body: JSON.stringify({
+        uid: sessionStorage.removeItem('uid'),
+        Author: 'Jaydon Reap',
+        Title: 'Taco Tuesday',
+        Genre: 'HipHop',
+        Description: '',
+        Beat: beatMatrix
+      }),
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!res.ok) {
+      throw new Error('Request returned a non 200 response code')
+    }
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 /**
@@ -194,7 +220,7 @@ function SoundBoard (mappedMatrix) {
  * @async
  */
 SoundBoard.prototype.play = async function (delay = 500) {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 10; i++) {
     this.board[i].play()
     await sleep(delay)
   }
