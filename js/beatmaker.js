@@ -128,7 +128,7 @@ async function playBeat () {
   const mappedMatrix = Object.values(beatMatrix)
 
   const soundBoard = new SoundBoard(mappedMatrix)
-  soundBoard.play(500)
+  await soundBoard.play(500)
 }
 
 /* LISTENERS and UTILITIES */
