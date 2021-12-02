@@ -12,12 +12,7 @@ const beatMatrix = {}
 let erasing = false
 const beatLength = Math.round(screen.width / 64) - 1
 
-$(document).ready(initialize)
-
-/**
- * Called once on page load. This is where all of the initialization logic goes
- */
-function initialize () {
+$(document).ready(() => {
   const sessionId = sessionStorage.getItem('uid')
   $.ajax({
     url: '/authenticateRoute',
@@ -26,10 +21,7 @@ function initialize () {
     statusCode: {
       200: function (result) {
         if (result) {
-          generateWorkspace()
-          bindToInstrumentButtons()
-          bindToControlButtons()
-          logoutBtn()
+          initialize()
         }
       },
       203: function (result) {
@@ -37,6 +29,16 @@ function initialize () {
       }
     }
   })
+})
+
+/**
+ * Called once on page load. This is where all of the initialization logic goes
+ */
+function initialize () {
+  generateWorkspace()
+  bindToInstrumentButtons()
+  bindToControlButtons()
+  logoutBtn()
 }
 
 function tempWrite () {
@@ -92,7 +94,8 @@ function generateWorkspace () {
     beatMatrix[i] = []
 
     // Add the column marker
-    const marker = $(`<div class="col track marker d-flex justify-content-center align-items-center"><i class="fas ${icons[i]} fa-2x"></i></div>`)
+    const formattedTooltip = instrumentsByIndex[i].charAt(0).toUpperCase() + instrumentsByIndex[i].slice(1)
+    const marker = $(`<div class="col track marker d-flex justify-content-center align-items-center"><a class="channel-label" href="#" data-toggle="tooltip" data-placement="right" title="${formattedTooltip}"><i class="fas ${icons[i]} fa-2x"></i></a></div>`)
     row.append(marker)
 
     for (let j = 0; j < colLimit; j++) {
@@ -105,6 +108,7 @@ function generateWorkspace () {
     }
   }
 
+  enableTooltips()
   console.log(beatMatrix)
 }
 
@@ -201,6 +205,13 @@ function sleep (delay) {
   return new Promise((resolve) => {
     setTimeout(resolve, delay)
   })
+}
+
+/**
+ * Utility function that enables all the bootstrap tooltips on the page
+ */
+function enableTooltips () {
+  $('[data-toggle="tooltip"]').tooltip()
 }
 
 function SoundBoard (mappedMatrix) {

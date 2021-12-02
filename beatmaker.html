@@ -58,33 +58,15 @@
             <div class="col">
                 <div class="card border-secondary bg-dark">
                     <div class="card-header">
-                        Instruments
+                        Controls
                     </div>
                     <div class="card-body">
                         <div class="row gy-2 mb-2 justify-content-center align-items-center">
-                            <div class="col">
-                                <a id="synth" class="btn btn-primary instrument">Synth</a>
+                            <div class="col-3">
+                                <a id="eraser" alt="eraser" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Eraser"><i class="fas fa-eraser"></i></a>
                             </div>
-                            <div class="col">
-                                <a id="piano" class="btn btn-primary instrument">Piano</a>
-                            </div>
-                            <div class="col">
-                                <a id="organ" class="btn btn-primary instrument">Organ</a>
-                            </div>
-                            <div class="col">
-                                <a id="horn" class="btn btn-primary instrument">Horn</a>
-                            </div>
-                            <div class="col">
-                                <a id="guitar" class="btn btn-primary instrument">Guitar</a>
-                            </div>
-                            <div class="col">
-                                <a id="flute" class="btn btn-primary instrument">Flute</a>
-                            </div>
-                            <div class="col">
-                                <a id="bass" class="btn btn-primary instrument">Bass</a>
-                            </div>
-                            <div class="col">
-                                <a id="eraser" class="btn btn-outline-danger">Eraser</a>
+                            <div class="col-3">
+                                <a id="play" alt="play" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Play"><i class="fas fa-play"></i></a>
                             </div>
                         </div>
                     </div>
@@ -92,38 +74,10 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card border-secondary bg-dark">
-                    <div class="card-header">
-                        Sample Selection
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center h-100">
-                            <div class="col">
-                                <a id="sample-prev" class="btn btn-primary">Prev</a>
-                            </div>
-                            <div class="col">
-                                <p id="sample-index" class="m-0 p-2">1</p>
-                            </div>
-                            <div class="col">
-                                <a id="sample-next" class="btn btn-primary">Next</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
             <div class="col">
-                <div class="card border-secondary bg-dark">
-                    <div class="card-header">
-                        Playback
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center h-100">
-                            <div class="col">
-                                <a id="play" class="btn btn-primary">Play</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -133,83 +87,6 @@
             <span class="text-muted">v1.0-beta | © 2021 BeatMaker Inc.</span>
         </div>
     </footer>
-
-
-    <!--
-    <div class="container">
-
-
-        <div class="menu-pane">
-            <button class="menu-button" type="button">Save</button>
-            <button class="menu-button" type="button">Exit</button>
-            <button class="menu-button" type="button">Profile</button>
-
-        </div>
-
-        <div class="drums beatpad beat-pad-btn-row-1">
-            <button id="Kick" class="instruments" type="button">Kick</button>
-            <button id="Crash" class="instruments" type="button">Crash</button>
-            <button id="Rides" class="instruments" type="button">Rides</button>
-            <button id="Snare" class="instruments" type="button">Snare</button>
-            <button id="Toms" class="instruments" type="button">Toms</button>
-            <button id="Conga" class="instruments" type="button">Conga</button>
-        </div>
-
-
-        <div class="beatpad beat-pad-btn-row-2">
-            <button id="Flute1" class="instruments" type="button">Flute1</button>
-            <button id="Flute2" class="instruments" type="button">Flute2</button>
-            <button id="Flute3" class="instruments" type="button">Flute3</button>
-            <button id="Flute4" class="instruments" type="button">Flute4</button>
-            <button id="Flute5" class="instruments" type="button">Flute5</button>
-            <button id="Flute6" class="instruments" type="button">Flute6</button>
-            <button id="Flute7" class="instruments" type="button">Flute7</button>
-            <button id="Flute8" class="instruments" type="button">Flute8</button>
-        </div>
-
-
-        <div class="beatpad beat-pad-btn-row-3">
-            <button id="Organ1" class="instruments" type="button">Organ1</button>
-            <button id="Organ2" class="instruments" type="button">Organ2</button>
-            <button id="Organ3" class="instruments" type="button">Organ3</button>
-            <button id="Organ4" class="instruments" type="button">Organ4</button>
-            <button id="Organ5" class="instruments" type="button">Organ5</button>
-            <button id="Organ6" class="instruments" type="button">Organ6</button>
-            <button id="Organ7" class="instruments" type="button">Organ7</button>
-            <button id="Organ8" class="instruments" type="button">Organ8</button>
-        </div>
-
-
-        <div class="beatpad beat-pad-btn-row-4">
-            <button id="Piano1" class="instruments" type="button">Piano1</button>
-            <button id="Piano2" class="instruments" type="button">Piano2</button>
-            <button id="Piano3" class="instruments" type="button">Piano3</button>
-            <button id="Piano4" class="instruments" type="button">Piano4</button>
-            <button id="Piano5" class="instruments" type="button">Piano5</button>
-            <button id="Piano6" class="instruments" type="button">Piano6</button>
-            <button id="Piano7" class="instruments" type="button">Piano7</button>
-            <button id="Piano8" class="instruments" type="button">Piano8</button>
-        </div>
-
-
-        <div class="beatpad beat-pad-btn-row-4">
-            <button id="Synth1" class="instruments" type="button">Synth1</button>
-            <button id="Synth2" class="instruments" type="button">Synth2</button>
-            <button id="Synth3" class="instruments" type="button">Synth3</button>
-            <button id="Synth4" class="instruments" type="button">Synth4</button>
-            <button id="Synth5" class="instruments" type="button">Synth5</button>
-            <button id="Synth6" class="instruments" type="button">Synth6</button>
-        </div>
-
-
-        <div class="play-record-btn">
-            <button class="instruments" type="button">Play</button>
-            <button class="instruments" type="button">Record</button>
-        </div>
-    </div>
-
--->
-
 
 </body>
 
