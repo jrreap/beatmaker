@@ -35,26 +35,35 @@ function readUsersBeats(callback) {
     });
 }
 
-function writeBeats(Author, Title, Genre, Description, Beat, callback) {
+
+function readBeat(beatID, callback) {
+
+}
+
+function writeNewBeats(Author, Title, Genre, Description, Beat, callback) {
     const db = getFirestore();
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const userID = user.uid;
-            addDoc(collection(db, "users", userID, "beats"), {
+            let beatRefrence = doc(collection(db, "beats"))
+            let newBeatId = beatRefrence.id
+            setDoc(beatRefrence, {
+                beatId: newBeatId,
                 Author: Author,
                 Title: Title,
                 Genre: Genre,
                 Description: Description,
                 Beat: Beat
-            });
-            addDoc(collection(db, "beats"), {
+            })
+            setDoc(doc(db, "users", userID, "beats", newBeatId), {
+                beatId: newBeatId,
                 Author: Author,
                 Title: Title,
                 Genre: Genre,
                 Description: Description,
                 Beat: Beat
-            });
+            })
             callback({ "success": true })
         } else {
             callback({ "success": false, "data": "Beat was not Uploaded" })
@@ -62,4 +71,13 @@ function writeBeats(Author, Title, Genre, Description, Beat, callback) {
     });
 }
 
-export { readUsersBeats, readAllBeats, writeBeats }
+/**
+ * Update Beats
+ * 
+ * 
+ */
+function updateBeats(beatMatrix, beatId, callback) {
+
+}
+
+export { readUsersBeats, readAllBeats, writeNewBeats }

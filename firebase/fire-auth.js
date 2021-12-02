@@ -1,4 +1,3 @@
-import e from "express";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore"
 

@@ -3,7 +3,7 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
 import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
-import { writeBeats, readUsersBeats, readAllBeats } from './firebase/fire-beats.js'
+import { writeNewBeats, readUsersBeats, readAllBeats } from './firebase/fire-beats.js'
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebase/fire-app.js'
 import e from 'express';
@@ -85,13 +85,14 @@ app.post('/signOut', (req, res) => {
 // Firebase Fire Store
 //////////////////////
 
-app.put('/writeBeat', (req, res) => {
+app.put('/writeNewBeat', (req, res) => {
   let Author = req.body.Author
   let Title = req.body.Title
   let Genre = req.body.Genre
   let Description = req.body.Description
   let Beat = req.body.Beat
-  writeBeats(Author, Title, Genre, Description, Beat, (result) => {
+
+  writeNewBeats(Author, Title, Genre, Description, Beat, (result) => {
     if (result.success) {
       res.status(200).send("Updated the beats!")
     } else {
@@ -100,9 +101,9 @@ app.put('/writeBeat', (req, res) => {
   })
 })
 
-app.post('/loadBeat', (req, res) => {
-  let beat
-})
+app.put('/updateBeat', (req, res) => [
+
+])
 
 
 app.get('/readUserInfo', (req, res) => {

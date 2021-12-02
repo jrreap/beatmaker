@@ -38,22 +38,6 @@ function initialize() {
   })
 }
 
-function tempWrite() {
-  $.ajax({
-    url: '/writeBeat',
-    type: 'PUT',
-    statusCode: {
-      200: function (userID) {
-        sessionStorage.removeItem("uid");
-        window.location.href = '/beatmaker.html'
-      },
-      500: function (result) {
-        console.log(result)
-        // display_alert(result.replace("Firebase: ", ''), 'danger')
-      }
-    }
-  });
-}
 
 function logoutBtn() {
   $('#logout-btn').on('click', function (e) {
