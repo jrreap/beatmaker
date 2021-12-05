@@ -3,12 +3,13 @@ $(document).ready(function () {
         e.preventDefault()
         const email = $('#email-input').val()
         const password = $('#password-input').val()
+        const name = $('#name-input').val()
         $("#liveAlertPlaceholder").empty();
 
         $.ajax({
             url: '/createNewAccount',
             type: 'POST',
-            data: { "email": email, "password": password },
+            data: { "email": email, "password": password, "name": name },
             statusCode: {
                 200: function (result) {
                     display_alert('Account Created!', 'success')

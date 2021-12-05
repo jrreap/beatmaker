@@ -3,8 +3,11 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
 import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
-import { initializeApp } from 'firebase/app'
+import { writeNewBeats, readUsersBeats, readAllBeats, readBeat } from './firebase/fire-beats.js'
+import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebase/fire-app.js'
+import e from 'express';
+import { resourceLimits } from 'worker_threads';
 
 const app = express()
 const port = 8080
@@ -32,22 +35,105 @@ app.listen(port, () => {
 // Firebase Auth
 /// ///////////////
 app.post('/authenticateRoute', (req, res) => {
-  const sessionUID = req.body.uid
-  sessionAuth(res, sessionUID)
+  let sessionUID = req.body.uid
+  sessionAuth(sessionUID, (result) => {
+    if (result.isLogedIn) {
+      res.status(200).send(result.userId)
+    } else {
+      res.status(203).send(result.error)
+    }
+  })
 })
 
 app.post('/createNewAccount', (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
-  createNewUser(res, email, password)
+  let email = req.body.email
+  let password = req.body.password
+  let name = req.body.name
+  createNewUser(email, password, name, (result) => {
+    if (result.success) {
+      res.status(200).send(result.userId)
+    } else {
+      res.status(203).send(result.error)
+    }
+  })
 })
 
 app.post('/login', (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
-  signInUser(res, email, password)
+  let email = req.body.email
+  let password = req.body.password
+  signInUser(email, password, (result) => {
+    if (result.success) {
+      res.status(200).send(result.userId)
+    } else {
+      res.status(203).send(result.error)
+    }
+  })
 })
 
+
 app.post('/signOut', (req, res) => {
-  signOutUser(res)
+  signOutUser((result) => {
+    if (result.success) {
+      res.status(200).send(result.message)
+    } else {
+      res.status(500).send(result.error)
+    }
+  })
 })
+
+///////////////////////
+// Firebase Fire Store
+//////////////////////
+
+app.put('/writeNewBeat', (req, res) => {
+  let Author = req.body.Author
+  let Title = req.body.Title
+  let Genre = req.body.Genre
+  let Description = req.body.Description
+  let Beat = req.body.Beat
+
+  writeNewBeats(Author, Title, Genre, Description, Beat, (result) => {
+    if (result.success) {
+      res.status(200).send("Updated the beats!")
+    } else {
+      res.status(203).send("Could Not Update Beats")
+    }
+  })
+})
+
+app.put('/', (req, res) => {
+
+})
+
+
+app.post('/readBeat', (req, res) => {
+  let beatId = req.body.beatId
+  readBeat(beatId, (result) => {
+    if (result.success) {
+      res.status(200).send(result.data)
+    } else {
+      res.status(203).send("Could Not Read Beat")
+    }
+  })
+})
+
+app.get('/readUserInfo', (req, res) => {
+  readUsersBeats((result) => {
+    if (result.success) {
+      res.status(200).send(result.data)
+    } else {
+      res.status(203).send(result.data)
+    }
+  })
+})
+
+app.get('/getAllBeats', (req, res) => {
+  readAllBeats((result) => {
+    if (result.success) {
+      res.status(200).send(result.data)
+    } else {
+      res.status(203).send([])
+    }
+  })
+})
+
