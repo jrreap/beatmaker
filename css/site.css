@@ -27,6 +27,15 @@ h1 {
   color: #C5C6C7 !important
 }
 
+/* Modal Overrides */
+.modal-header {
+  border: none;
+}
+
+.modal-footer {
+  border: none;
+}
+
 /* Button Overrides */
 
 .btn.btn-primary {
