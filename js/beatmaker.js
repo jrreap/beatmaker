@@ -142,6 +142,10 @@ async function saveBeat () {
     if (!res.ok) {
       throw new Error('Request returned a non 200 response code')
     }
+
+    // Toggle the bootstrap modal
+    const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
+    saveModal.toggle()
   } catch (err) {
     console.error(err)
   }
