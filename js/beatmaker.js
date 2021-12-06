@@ -9,7 +9,6 @@ const INSTRUMENTS = {
 
 const sampleIndex = 1
 const beatMatrix = {}
-let erasing = false
 const beatLength = Math.round(screen.width / 64) - 1
 
 $(document).ready(() => {
@@ -99,9 +98,6 @@ function generateWorkspace () {
  */
 function bindToControlButtons () {
   $('#play').on('click', playBeat)
-  $('#eraser').on('click', () => {
-    erasing = !erasing
-  })
   $('#save').on('click', saveBeat)
 }
 
@@ -176,6 +172,11 @@ function setSpaceInstrument (row, col, element, instrument) {
   console.log(beatMatrix)
 }
 
+/**
+ * Sends a toast message and triggers it accordingly
+ * @param {string} message The message to be sent in the toast
+ * @param {boolean} success Whether this is a success message and should be styled as such
+ */
 function sendToastMessage (message, success = false) {
   const toastElement = $('#toast')
   $('.toast-body').text(message)
@@ -191,6 +192,10 @@ function sendToastMessage (message, success = false) {
   bootstrap.Toast.getOrCreateInstance(toastElement).show()
 }
 
+/**
+ * Validates the current value of the save modal to make sure it's not empty
+ * @returns {boolean} Whether the fields have been filled out properly, false if not
+ */
 function validateSave () {
   const titleField = $('#titleInput1').val()
   console.log(titleField)
