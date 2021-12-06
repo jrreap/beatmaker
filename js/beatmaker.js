@@ -40,23 +40,6 @@ function initialize () {
   logoutBtn()
 }
 
-function tempWrite () {
-  $.ajax({
-    url: '/writeBeat',
-    type: 'PUT',
-    statusCode: {
-      200: function (userID) {
-        sessionStorage.removeItem('uid')
-        window.location.href = '/beatmaker.html'
-      },
-      500: function (result) {
-        console.log(result)
-        // display_alert(result.replace("Firebase: ", ''), 'danger')
-      }
-    }
-  })
-}
-
 function logoutBtn () {
   $('#logout-btn').on('click', function (e) {
     $.ajax({
@@ -124,7 +107,7 @@ function bindToControlButtons () {
 
 async function saveBeat () {
   try {
-    const res = await fetch('/writeBeat', {
+    const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
         Author: 'Jaydon Reap',
