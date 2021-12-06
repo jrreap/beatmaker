@@ -105,8 +105,17 @@ function bindToControlButtons () {
   $('#save').on('click', saveBeat)
 }
 
+/**
+ * Saves the current beat in the workspace
+ */
 async function saveBeat () {
   try {
+    // Validate input first
+    if (!validateSave()) {
+      sendToastMessage('Please fill out required fields!')
+      return
+    }
+
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
@@ -130,7 +139,7 @@ async function saveBeat () {
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
     saveModal.toggle()
 
-    toggleSuccessToast()
+    sendToastMessage('Beat successfully saved!', true)
   } catch (err) {
     console.error(err)
   }
@@ -143,7 +152,7 @@ async function playBeat () {
   const mappedMatrix = Object.values(beatMatrix)
 
   const soundBoard = new SoundBoard(mappedMatrix)
-  await soundBoard.play(500)
+  await soundBoard.play(700)
 }
 
 /* LISTENERS and UTILITIES */
@@ -167,10 +176,29 @@ function setSpaceInstrument (row, col, element, instrument) {
   console.log(beatMatrix)
 }
 
-function toggleSuccessToast () {
-  const toast = $('.toast')
-  const toastEl = new bootstrap.Toast(toast)
-  toastEl.show()
+function sendToastMessage (message, success = false) {
+  const toastElement = $('#toast')
+  $('.toast-body').text(message)
+
+  if (success) {
+    toastElement.addClass('bg-success')
+    toastElement.removeClass('bg-info')
+  } else {
+    toastElement.removeClass('bg-success')
+    toastElement.addClass('bg-info')
+  }
+
+  bootstrap.Toast.getOrCreateInstance(toastElement).show()
+}
+
+function validateSave () {
+  const titleField = $('#titleInput1').val()
+  console.log(titleField)
+  if (titleField === '') {
+    return false
+  }
+
+  return true
 }
 
 /**
