@@ -159,11 +159,8 @@ async function playBeat () {
  */
 function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
-  console.log(element)
-  element.text('')
 
   if (beatMatrix[row][col] === '') {
-    element.text(instrument)
     element.addClass(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
