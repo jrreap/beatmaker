@@ -70,17 +70,17 @@ function generateWorkspace () {
   const colLimit = beatLength + 1
 
   for (let i = 0; i < 6; i++) {
-    const row = $('<div class="row track"></div>')
+    const row = $(`<div class="row track ${instrumentsByIndex[i]}"></div>`)
     workspace.append(row)
     beatMatrix[i] = []
 
     // Add the column marker
     const formattedTooltip = instrumentsByIndex[i].charAt(0).toUpperCase() + instrumentsByIndex[i].slice(1)
-    const marker = $(`<div class="col track marker d-flex justify-content-center align-items-center"><a class="channel-label" href="#" data-toggle="tooltip" data-placement="right" title="${formattedTooltip}"><i class="fas ${icons[i]} fa-2x"></i></a></div>`)
+    const marker = $(`<div class="col marker ${instrumentsByIndex[i]} d-flex justify-content-center align-items-center"><a class="channel-label" href="#" data-toggle="tooltip" data-placement="right" title="${formattedTooltip}"><i class="fas ${icons[i]} fa-2x"></i></a></div>`)
     row.append(marker)
 
     for (let j = 0; j < colLimit; j++) {
-      const col = $(`<div id='track${i}-cell${j}' class="col track selector d-flex justify-content-center align-items-center"></div>`)
+      const col = $(`<div id='track${i}-cell${j}' class="col selector d-flex justify-content-center align-items-center"></div>`)
       row.append(col)
 
       beatMatrix[i][j] = ''
@@ -163,9 +163,12 @@ function setSpaceInstrument (row, col, element, instrument) {
   element.text('')
 
   if (beatMatrix[row][col] === '') {
-    element.append(instrument)
+    element.text(instrument)
+    element.addClass(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
+    const len = beatMatrix[row][col].length
+    element.removeClass(beatMatrix[row][col].substring(0, len - 1))
     beatMatrix[row][col] = '' // Eraser mode
   }
 
