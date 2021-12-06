@@ -157,7 +157,7 @@ function setSpaceInstrument (row, col, element, instrument) {
   console.log(element)
   element.text('')
 
-  if (beatMatrix[row][col] == '') {
+  if (beatMatrix[row][col] === '') {
     element.append(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
