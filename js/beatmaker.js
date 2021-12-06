@@ -9,7 +9,7 @@ const INSTRUMENTS = {
 
 const sampleIndex = 1
 const beatMatrix = {}
-let erasing = false
+
 const beatLength = Math.round(screen.width / 64) - 1
 
 $(document).ready(() => {
@@ -99,9 +99,6 @@ function generateWorkspace () {
  */
 function bindToControlButtons () {
   $('#play').on('click', playBeat)
-  $('#eraser').on('click', () => {
-    erasing = !erasing
-  })
   $('#save').on('click', saveBeat)
 }
 
@@ -161,7 +158,7 @@ function setSpaceInstrument (row, col, element, instrument) {
     element.append(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
-    beatMatrix[row][col] = '' // Eraser mode
+    beatMatrix[row][col] = '' // Erase when clicked on a set instument
   }
 
   console.log(beatMatrix)
