@@ -31,6 +31,12 @@
     background-color: #0B0C10;
 }
 
+.marker a {
+    text-decoration: none;
+    font-size: 15px;
+    color: white;
+}
+
 .selector:hover {
     background-color: #EBFF99;
 }
