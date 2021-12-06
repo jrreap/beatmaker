@@ -146,6 +146,8 @@ async function saveBeat () {
     // Toggle the bootstrap modal
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
     saveModal.toggle()
+
+    toggleSuccessToast()
   } catch (err) {
     console.error(err)
   }
@@ -179,6 +181,12 @@ function setSpaceInstrument (row, col, element, instrument) {
   }
 
   console.log(beatMatrix)
+}
+
+function toggleSuccessToast () {
+  const toast = $('.toast')
+  const toastEl = new bootstrap.Toast(toast)
+  toastEl.show()
 }
 
 /**
