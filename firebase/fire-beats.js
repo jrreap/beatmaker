@@ -34,20 +34,39 @@ function readUsersBeats (callback) {
   })
 }
 
-function writeBeats (Author, Title, Genre, Description, Beat, callback) {
+function readBeat (beatID, callback) {
   const db = getFirestore()
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
+    const auth = getAuth()
+    onAuthStateChanged(auth, (user) => {
     if (user) {
       const userID = user.uid
-      addDoc(collection(db, 'users', userID, 'beats'), {
+            onSnapshot(doc(db, 'users', userID, 'beats', beatID), (doc) => {
+        callback({ success: true, data: doc.data() })
+      })
+        } else {
+      callback({ success: false, data: 'Cannot Access Users Beats' })
+    }
+  })
+}
+
+function writeNewBeats (Author, Title, Genre, Description, Beat, callback) {
+  const db = getFirestore()
+    const auth = getAuth()
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const userID = user.uid
+            let beatRefrence = doc(collection(db, 'beats'))
+      const newBeatId = beatRefrence.id
+      setDoc(beatRefrence, {
+        beatId: newBeatId,
         Author: Author,
         Title: Title,
         Genre: Genre,
         Description: Description,
         Beat: Beat
       })
-      addDoc(collection(db, 'beats'), {
+      setDoc(doc(db, 'users', userID, 'beats', newBeatId), {
+        beatId: newBeatId,
         Author: Author,
         Title: Title,
         Genre: Genre,
@@ -61,4 +80,4 @@ function writeBeats (Author, Title, Genre, Description, Beat, callback) {
   })
 }
 
-export { readUsersBeats, readAllBeats, writeBeats }
+export { readUsersBeats, readAllBeats, writeNewBeats, readBeat }
