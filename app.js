@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
 import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
 import { writeNewBeats, readUsersBeats, readAllBeats, readBeat } from './firebase/fire-beats.js'
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app'
 import firebaseConfig from './firebase/fire-app.js'
 // import e from 'express';
 // import { resourceLimits } from 'worker_threads';
@@ -35,7 +35,7 @@ app.listen(port, () => {
 // Firebase Auth
 /// ///////////////
 app.post('/authenticateRoute', (req, res) => {
-  const sessionUID = req.body.uid
+  const sessionUID = req.params.uid
   sessionAuth(sessionUID, (result) => {
     if (result.isLogedIn) {
       res.status(200).send(result.userId)
@@ -104,8 +104,8 @@ app.put('updateBeat', (req, res) => {
 
 })
 
-app.post('/readBeat', (req, res) => {
-  const beatId = req.body.beatId
+app.get('/readBeat', (req, res) => {
+  const beatId = req.headers.beatId
   readBeat(beatId, (result) => {
     if (result.success) {
       res.status(200).send(result.data)
