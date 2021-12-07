@@ -1,6 +1,13 @@
 import { getFirestore, doc, setDoc, onSnapshot, addDoc, collection } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
+/**
+ * 
+ * Reads all the Beats in the database
+ * 
+ * @param {function} callback: callback function returns an array of beats 
+ * 
+ */
 function readAllBeats(callback) {
     const db = getFirestore()
     const auth = getAuth()
@@ -19,6 +26,11 @@ function readAllBeats(callback) {
     })
 }
 
+/**
+ * Reads all the beats for a specific users 
+ * 
+ * @param {function} callback: callback function returns an array of beats of the user
+ */
 function readUsersBeats(callback) {
     const db = getFirestore()
     const auth = getAuth()
@@ -34,6 +46,14 @@ function readUsersBeats(callback) {
     })
 }
 
+
+/**
+ * 
+ * Reads a specific beats from the data base with the beat id 
+ * 
+ * @param {string} beatID: The unique ID for the beat you want to read 
+ * @param {function} callback: callback function returns the specific beats
+ */
 function readBeat(beatID, callback) {
     const db = getFirestore()
     const auth = getAuth()
@@ -49,6 +69,17 @@ function readBeat(beatID, callback) {
     })
 }
 
+/**
+ * Writes a new beat to the database
+ * 
+ * 
+ * @param {String} Author: The author of the beat
+ * @param {string} Title: The title of the beat
+ * @param {string} Genre: The Genre of the beat
+ * @param {string} Description: The description of the beat
+ * @param {JSON} Beat: The JSON object that contains the beat matric
+ * @param {function} callback: Call back function that returns the beat id on success
+ */
 function writeNewBeats(Author, Title, Genre, Description, Beat, callback) {
     const db = getFirestore()
     const auth = getAuth()
@@ -81,6 +112,19 @@ function writeNewBeats(Author, Title, Genre, Description, Beat, callback) {
 }
 
 
+/**
+ * Updates an exisiting beat to the database
+ * 
+ * 
+ * @param {String} Author: The author of the beat
+ * @param {string} Title: The title of the beat
+ * @param {string} Genre: The Genre of the beat
+ * @param {string} Description: The description of the beat
+ * @param {string} BeatId: The unique ID for the beat you want to update
+ * @param {JSON} Beat: The JSON object that contains the beat matric
+ * @param {function} callback: Call back function that returns the beat id on success
+
+ */
 function updateBeat(Author, Title, Genre, Description, Beat, BeatId, callback) {
     const db = getFirestore()
     const auth = getAuth()
