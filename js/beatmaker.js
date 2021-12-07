@@ -110,7 +110,6 @@ function generateWorkspace () {
   }
 
   enableTooltips()
-  console.log(beatMatrix)
 }
 
 /**
@@ -238,7 +237,7 @@ async function loadBeat (id) {
  * Reads in the beat matrix and plays back the audio
  */
 async function playBeat () {
-  const mappedMatrix = Object.values(beatMatrix)
+  const mappedMatrix = Object.values(beatObject.Beat)
 
   const soundBoard = new SoundBoard(mappedMatrix)
   await soundBoard.play(700)
