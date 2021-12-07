@@ -8,7 +8,18 @@ const INSTRUMENTS = {
 }
 
 const sampleIndex = 1
-const beatMatrix = {}
+
+const beatObject = {
+  Author: 'Jaydon Reap',
+  Title: 'Taco Tuesday',
+  Genre: 'HipHop',
+  Description: '',
+  Beat: {}
+}
+
+// State
+let currentBeatID = ''
+let editing = false
 
 const beatLength = Math.round(screen.width / 64) - 1
 
@@ -38,6 +49,13 @@ function initialize () {
   generateWorkspace()
   bindToControlButtons()
   logoutBtn()
+
+  const params = new URLSearchParams(window.location.search)
+  const id = params.get('id')
+
+  if (id) {
+    loadBeat(id)
+  }
 }
 
 function logoutBtn () {
@@ -66,6 +84,7 @@ function generateWorkspace () {
   const workspace = $('#workspace')
   const icons = ['fa-wave-square', 'fa-guitar', 'fa-ruler-horizontal', 'fa-plus', 'fa-drum', 'fa-guitar']
   const instrumentsByIndex = Object.values(INSTRUMENTS)
+  const beatMatrix = beatObject.Beat
 
   // On initial load generate a nice amount of columns for the screen size
   const colLimit = beatLength + 1
@@ -102,10 +121,18 @@ function bindToControlButtons () {
   $('#save').on('click', saveBeat)
 }
 
+async function saveBeat () {
+  if (editing) {
+    await updateBeat()
+  } else {
+    await createBeat()
+  }
+}
+
 /**
  * Saves the current beat in the workspace
  */
-async function saveBeat () {
+async function createBeat () {
   try {
     // Validate input first
     if (!validateSave()) {
@@ -116,11 +143,46 @@ async function saveBeat () {
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
-        Author: 'Jaydon Reap',
-        Title: 'Taco Tuesday',
-        Genre: 'HipHop',
-        Description: '',
-        Beat: beatMatrix
+        ...beatObject
+      }),
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!res.ok) {
+      throw new Error('Request returned a non 200 response code')
+    }
+
+    // Since we saved a new beat we need to make sure we update this beat with the returned ID
+    const json = await res.json()
+    currentBeatID = json.data
+    editing = true
+
+    // Toggle the bootstrap modal
+    const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
+    saveModal.toggle()
+
+    sendToastMessage('Beat successfully saved!', true)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+async function updateBeat () {
+  try {
+    // Validate input first
+    if (!validateSave()) {
+      sendToastMessage('Please fill out required fields!')
+      return
+    }
+
+    const res = await fetch('/updateBeat', {
+      body: JSON.stringify({
+        uid: sessionStorage.removeItem('uid'),
+        BeatID: currentBeatID,
+        ...beatObject.Beat
       }),
       method: 'PUT',
       headers: {
@@ -136,7 +198,37 @@ async function saveBeat () {
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
     saveModal.toggle()
 
-    sendToastMessage('Beat successfully saved!', true)
+    sendToastMessage('Beat successfully updated!', true)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+async function loadBeat (id) {
+  editing = true
+  currentBeatID = id
+
+  try {
+    const res = await fetch('/readBeat', {
+      body: JSON.stringify({
+        uid: sessionStorage.removeItem('uid'),
+        beatId: id
+      }),
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!res.ok) {
+      throw new Error('Request returned a non 200 response code')
+    }
+
+    // Toggle the bootstrap modal
+    const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
+    saveModal.toggle()
+
+    sendToastMessage('Beat successfully updated!', true)
   } catch (err) {
     console.error(err)
   }
@@ -160,6 +252,7 @@ async function playBeat () {
  */
 function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
+  const beatMatrix = beatObject.Beat
 
   if (beatMatrix[row][col] === '') {
     element.addClass(instrument)
