@@ -3,7 +3,7 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
 import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
-import { writeNewBeats, readUsersBeats, readAllBeats, readBeat } from './firebase/fire-beats.js'
+import { writeNewBeats, readUsersBeats, readAllBeats, readBeat, updateBeat } from './firebase/fire-beats.js'
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebase/fire-app.js'
 // import e from 'express';
@@ -101,8 +101,21 @@ app.put('/writeNewBeat', (req, res) => {
   })
 })
 
-app.put('updateBeat', (req, res) => {
+app.put('/updateBeat', (req, res) => {
+  let Author = req.body.Author
+  let Title = req.body.Title
+  let Genre = req.body.Genre
+  let Description = req.body.Description
+  let Beat = req.body.Beat
+  let BeatID = req.body.BeatID
 
+  updateBeat(Author, Title, Genre, Description, Beat, BeatID, (result) => {
+    if (result.success) {
+      res.status(200).send(result.data)
+    } else {
+      res.status(203).send("Could Not Update Beats")
+    }
+  })
 })
 
 

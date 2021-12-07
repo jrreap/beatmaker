@@ -85,7 +85,28 @@ function updateBeat(Author, Title, Genre, Description, Beat, BeatId, callback) {
     const db = getFirestore()
     const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
-
+        if (user) {
+            const userID = user.uid
+            setDoc(doc(db, 'beats', BeatId), {
+                beatId: BeatId,
+                Author: Author,
+                Title: Title,
+                Genre: Genre,
+                Description: Description,
+                Beat: Beat,
+            })
+            setDoc(doc(db, 'users', userID, 'beats', BeatId), {
+                beatId: newBeatId,
+                Author: Author,
+                Title: Title,
+                Genre: Genre,
+                Description: Description,
+                Beat: Beat
+            })
+            callback({ success: true, data: BeatId })
+        } else {
+            callback({ success: false, data: 'Beat was not Uploaded' })
+        }
     })
 }
 
