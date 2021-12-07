@@ -20,7 +20,8 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">BeatMaker</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -47,7 +48,8 @@
     <div class="container-fluid">
         <!-- Success Toast -->
         <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-            <div class="toast align-items-center bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+            <div id='toast' class="toast align-items-center bg-success" role="alert" aria-live="assertive"
+                aria-atomic="true">
                 <div class="d-flex">
                     <div class="toast-body">
                         Beat successfully saved!
@@ -96,18 +98,14 @@
         <div id="workspace">
 
         </div>
-        <div class="row justify-content-start align-items-start bg-dark p-4">
-            <div class="col">
+        <div class="row justify-content-end align-items-center bg-dark p-4">
+            <div class="col-4">
                 <div class="card border-secondary bg-dark">
                     <div class="card-header">
                         Controls
                     </div>
                     <div class="card-body">
                         <div class="row gy-2 mb-2 justify-content-center align-items-center">
-                            <div class="col-3">
-                                <a id="eraser" alt="eraser" class="btn btn-outline-danger" data-toggle="tooltip"
-                                    data-placement="top" title="Eraser"><i class="fas fa-eraser"></i></a>
-                            </div>
                             <div class="col-3">
                                 <a id="saveBtn" alt="save" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#saveModal" data-toggle="tooltip" data-placement="top"
@@ -121,12 +119,6 @@
                     </div>
 
                 </div>
-            </div>
-            <div class="col">
-
-            </div>
-            <div class="col">
-
             </div>
         </div>
     </div>

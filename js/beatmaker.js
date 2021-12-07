@@ -71,17 +71,17 @@ function generateWorkspace () {
   const colLimit = beatLength + 1
 
   for (let i = 0; i < 6; i++) {
-    const row = $('<div class="row track"></div>')
+    const row = $(`<div class="row track ${instrumentsByIndex[i]}"></div>`)
     workspace.append(row)
     beatMatrix[i] = []
 
     // Add the column marker
     const formattedTooltip = instrumentsByIndex[i].charAt(0).toUpperCase() + instrumentsByIndex[i].slice(1)
-    const marker = $(`<div class="col track marker d-flex justify-content-center align-items-center"><a class="channel-label" href="#" data-toggle="tooltip" data-placement="right" title="${formattedTooltip}"><i class="fas ${icons[i]} fa-2x"></i></a></div>`)
+    const marker = $(`<div class="col marker ${instrumentsByIndex[i]} d-flex justify-content-center align-items-center"><a class="channel-label" href="#" data-toggle="tooltip" data-placement="right" title="${formattedTooltip}"><i class="fas ${icons[i]} fa-2x"></i></a></div>`)
     row.append(marker)
 
     for (let j = 0; j < colLimit; j++) {
-      const col = $(`<div id='track${i}-cell${j}' class="col track selector d-flex justify-content-center align-items-center"></div>`)
+      const col = $(`<div id='track${i}-cell${j}' class="col selector d-flex justify-content-center align-items-center"></div>`)
       row.append(col)
 
       beatMatrix[i][j] = ''
@@ -102,8 +102,17 @@ function bindToControlButtons () {
   $('#save').on('click', saveBeat)
 }
 
+/**
+ * Saves the current beat in the workspace
+ */
 async function saveBeat () {
   try {
+    // Validate input first
+    if (!validateSave()) {
+      sendToastMessage('Please fill out required fields!')
+      return
+    }
+
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
@@ -127,7 +136,7 @@ async function saveBeat () {
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
     saveModal.toggle()
 
-    toggleSuccessToast()
+    sendToastMessage('Beat successfully saved!', true)
   } catch (err) {
     console.error(err)
   }
@@ -140,7 +149,7 @@ async function playBeat () {
   const mappedMatrix = Object.values(beatMatrix)
 
   const soundBoard = new SoundBoard(mappedMatrix)
-  await soundBoard.play(500)
+  await soundBoard.play(700)
 }
 
 /* LISTENERS and UTILITIES */
@@ -151,23 +160,51 @@ async function playBeat () {
  */
 function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
-  console.log(element)
-  element.text('')
 
   if (beatMatrix[row][col] === '') {
-    element.append(instrument)
+    element.addClass(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
-    beatMatrix[row][col] = '' // Erase when clicked on a set instument
+    const len = beatMatrix[row][col].length
+    element.removeClass(beatMatrix[row][col].substring(0, len - 1))
+    beatMatrix[row][col] = '' // Eraser mode
   }
 
   console.log(beatMatrix)
 }
 
-function toggleSuccessToast () {
-  const toast = $('.toast')
-  const toastEl = new bootstrap.Toast(toast)
-  toastEl.show()
+/**
+ * Sends a toast message and triggers it accordingly
+ * @param {string} message The message to be sent in the toast
+ * @param {boolean} success Whether this is a success message and should be styled as such
+ */
+function sendToastMessage (message, success = false) {
+  const toastElement = $('#toast')
+  $('.toast-body').text(message)
+
+  if (success) {
+    toastElement.addClass('bg-success')
+    toastElement.removeClass('bg-info')
+  } else {
+    toastElement.removeClass('bg-success')
+    toastElement.addClass('bg-info')
+  }
+
+  bootstrap.Toast.getOrCreateInstance(toastElement).show()
+}
+
+/**
+ * Validates the current value of the save modal to make sure it's not empty
+ * @returns {boolean} Whether the fields have been filled out properly, false if not
+ */
+function validateSave () {
+  const titleField = $('#titleInput1').val()
+  console.log(titleField)
+  if (titleField === '') {
+    return false
+  }
+
+  return true
 }
 
 /**
