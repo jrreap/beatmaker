@@ -9,6 +9,7 @@ const INSTRUMENTS = {
 
 const sampleIndex = 1
 const beatMatrix = {}
+
 const beatLength = Math.round(screen.width / 64) - 1
 
 $(document).ready(() => {
