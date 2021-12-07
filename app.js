@@ -6,8 +6,8 @@ import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/
 import { writeNewBeats, readUsersBeats, readAllBeats, readBeat } from './firebase/fire-beats.js'
 import { initializeApp } from "firebase/app";
 import firebaseConfig from './firebase/fire-app.js'
-import e from 'express';
-import { resourceLimits } from 'worker_threads';
+// import e from 'express';
+// import { resourceLimits } from 'worker_threads';
 
 const app = express()
 const port = 8080
@@ -94,14 +94,14 @@ app.put('/writeNewBeat', (req, res) => {
 
   writeNewBeats(Author, Title, Genre, Description, Beat, (result) => {
     if (result.success) {
-      res.status(200).send("Updated the beats!")
+      res.status(200).send(result.data)
     } else {
       res.status(203).send("Could Not Update Beats")
     }
   })
 })
 
-app.put('/', (req, res) => {
+app.put('updateBeat', (req, res) => {
 
 })
 
