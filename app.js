@@ -35,7 +35,7 @@ app.listen(port, () => {
 // Firebase Auth
 /// ///////////////
 app.post('/authenticateRoute', (req, res) => {
-  const sessionUID = req.params.uid
+  const sessionUID = req.headers.uid
   sessionAuth(sessionUID, (result) => {
     if (result.isLogedIn) {
       res.status(200).send(result.userId)

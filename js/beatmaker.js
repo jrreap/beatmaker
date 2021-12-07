@@ -9,7 +9,7 @@ const INSTRUMENTS = {
 
 const sampleIndex = 1
 
-const beatObject = {
+let beatObject = {
   Author: 'Jaydon Reap',
   Title: 'Taco Tuesday',
   Genre: 'HipHop',
@@ -21,25 +21,26 @@ const beatObject = {
 let currentBeatID = ''
 let editing = false
 
-const beatLength = Math.round(screen.width / 64) - 1
+const beatLength = 24
 
-$(document).ready(() => {
-  const sessionId = sessionStorage.getItem('uid')
-  $.ajax({
-    url: '/authenticateRoute',
-    type: 'POST',
-    data: { uid: sessionId },
-    statusCode: {
-      200: function (result) {
-        if (result) {
-          initialize()
-        }
-      },
-      203: function (result) {
-        window.location.href = '/index.html'
+$(document).ready(async () => {
+  try {
+    const res = await fetch('/authenticateRoute', {
+      method: 'POST',
+      headers: {
+        uid: sessionStorage.getItem('uid')
       }
+    })
+
+    if (res.status === 203) {
+      throw new Error('Failed to authenticate, token likely expired')
     }
-  })
+
+    initialize()
+  } catch (err) {
+    console.error(err)
+    window.location.href = '/index.html'
+  }
 })
 
 /**
@@ -208,14 +209,11 @@ async function loadBeat (id) {
   currentBeatID = id
 
   try {
-    const res = await fetch('/readBeat', {
-      body: JSON.stringify({
-        uid: sessionStorage.removeItem('uid'),
-        beatId: id
-      }),
+    const res = await fetch(`/readBeat?id=${id}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        uid: sessionStorage.getItem('uid')
       }
     })
 
@@ -223,11 +221,19 @@ async function loadBeat (id) {
       throw new Error('Request returned a non 200 response code')
     }
 
-    // Toggle the bootstrap modal
-    const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
-    saveModal.toggle()
+    const { data } = await res.json()
+    beatObject = data
 
-    sendToastMessage('Beat successfully updated!', true)
+    const beatMatrix = beatObject.Beat
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < beatLength; col++) {
+        if (beatMatrix[row][col] !== '') {
+          $(`#track${row}-cell${col}`).addClass(getInstrumentFromMatrix(beatMatrix[row][col]))
+        }
+      }
+    }
+
+    sendToastMessage('Beat successfully loaded', true)
   } catch (err) {
     console.error(err)
   }
@@ -257,8 +263,7 @@ function setSpaceInstrument (row, col, element, instrument) {
     element.addClass(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
-    const len = beatMatrix[row][col].length
-    element.removeClass(beatMatrix[row][col].substring(0, len - 1))
+    element.removeClass(getInstrumentFromMatrix(beatMatrix[row][col]))
     beatMatrix[row][col] = '' // Eraser mode
   }
 
@@ -315,6 +320,15 @@ function sleep (delay) {
  */
 function enableTooltips () {
   $('[data-toggle="tooltip"]').tooltip()
+}
+
+/**
+ * Utility that strips the sample id off the item in a matrix space to get the instrument name
+ * @param {string} instrument The instrument at a specified matrix space
+ * @returns {string} The instrument type for that matrix space
+ */
+function getInstrumentFromMatrix (instrument) {
+  return instrument.substring(0, instrument.length - 1)
 }
 
 /**
