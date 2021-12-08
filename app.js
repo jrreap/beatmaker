@@ -104,11 +104,12 @@ app.put('updateBeat', (req, res) => {
 
 })
 
-app.get('/readBeat', (req, res) => {
-  const beatId = req.headers.beatId
-  readBeat(beatId, (result) => {
+app.get('/readBeat', async (req, res) => {
+  const beatId = req.query.id
+  console.log(beatId)
+  await readBeat(beatId, (result) => {
     if (result.success) {
-      res.status(200).send(result.data)
+      res.status(200).json({ data: result.data })
     } else {
       res.status(203).send('Could Not Read Beat')
     }
