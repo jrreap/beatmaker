@@ -112,7 +112,7 @@ function updateBeat (Author, Title, Genre, Description, Beat, BeatId, callback) 
         Beat: Beat
       })
       setDoc(doc(db, 'users', userID, 'beats', BeatId), {
-        beatId: newBeatId,
+        beatId: BeatId,
         Author: Author,
         Title: Title,
         Genre: Genre,

@@ -182,7 +182,7 @@ async function updateBeat () {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
         BeatID: currentBeatID,
-        ...beatObject.Beat
+        ...beatObject
       }),
       method: 'PUT',
       headers: {

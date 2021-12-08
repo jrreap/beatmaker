@@ -110,7 +110,7 @@ app.put('/updateBeat', (req, res) => {
 
   updateBeat(Author, Title, Genre, Description, Beat, BeatID, (result) => {
     if (result.success) {
-      res.status(200).send(result.data)
+      res.status(200).json({ data: result.data })
     } else {
       res.status(203).send('Could Not Update Beats')
     }
