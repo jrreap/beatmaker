@@ -8,27 +8,39 @@ const INSTRUMENTS = {
 }
 
 const sampleIndex = 1
-const beatMatrix = {}
 
-const beatLength = Math.round(screen.width / 64) - 1
+let beatObject = {
+  Author: 'Jaydon Reap',
+  Title: 'Taco Tuesday',
+  Genre: 'HipHop',
+  Description: '',
+  Beat: {}
+}
 
-$(document).ready(() => {
-  const sessionId = sessionStorage.getItem('uid')
-  $.ajax({
-    url: '/authenticateRoute',
-    type: 'POST',
-    data: { uid: sessionId },
-    statusCode: {
-      200: function (result) {
-        if (result) {
-          initialize()
-        }
-      },
-      203: function (result) {
-        window.location.href = '/index.html'
+// State
+let currentBeatID = ''
+let editing = false
+
+const beatLength = 24
+
+$(document).ready(async () => {
+  try {
+    const res = await fetch('/authenticateRoute', {
+      method: 'POST',
+      headers: {
+        uid: sessionStorage.getItem('uid')
       }
+    })
+
+    if (res.status === 203) {
+      throw new Error('Failed to authenticate, token likely expired')
     }
-  })
+
+    initialize()
+  } catch (err) {
+    console.error(err)
+    window.location.href = '/index.html'
+  }
 })
 
 /**
@@ -38,6 +50,13 @@ function initialize () {
   generateWorkspace()
   bindToControlButtons()
   logoutBtn()
+
+  const params = new URLSearchParams(window.location.search)
+  const id = params.get('id')
+
+  if (id) {
+    loadBeat(id)
+  }
 }
 
 function logoutBtn () {
@@ -66,6 +85,7 @@ function generateWorkspace () {
   const workspace = $('#workspace')
   const icons = ['fa-wave-square', 'fa-guitar', 'fa-ruler-horizontal', 'fa-plus', 'fa-drum', 'fa-guitar']
   const instrumentsByIndex = Object.values(INSTRUMENTS)
+  const beatMatrix = beatObject.Beat
 
   // On initial load generate a nice amount of columns for the screen size
   const colLimit = beatLength + 1
@@ -91,7 +111,6 @@ function generateWorkspace () {
   }
 
   enableTooltips()
-  console.log(beatMatrix)
 }
 
 /**
@@ -102,10 +121,18 @@ function bindToControlButtons () {
   $('#save').on('click', saveBeat)
 }
 
+async function saveBeat () {
+  if (editing) {
+    await updateBeat(currentBeatID)
+  } else {
+    await createBeat()
+  }
+}
+
 /**
  * Saves the current beat in the workspace
  */
-async function saveBeat () {
+async function createBeat () {
   try {
     // Validate input first
     if (!validateSave()) {
@@ -116,11 +143,50 @@ async function saveBeat () {
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
-        Author: 'Jaydon Reap',
-        Title: 'Taco Tuesday',
-        Genre: 'HipHop',
-        Description: '',
-        Beat: beatMatrix
+        ...beatObject
+      }),
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!res.ok) {
+      throw new Error('Request returned a non 200 response code')
+    }
+
+    // Since we saved a new beat we need to make sure we update this beat with the returned ID
+    const json = await res.json()
+    currentBeatID = json.data
+    editing = true
+
+    // Toggle the bootstrap modal
+    const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
+    saveModal.toggle()
+
+    sendToastMessage('Beat successfully saved!', true)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+/**
+ * Updates the currently open beat, this is fired when we are editing an existing beat
+ * @param {string} beatID The unique identifier for this beat
+ */
+async function updateBeat (beatID) {
+  try {
+    // Validate input first
+    if (!validateSave()) {
+      sendToastMessage('Please fill out required fields!')
+      return
+    }
+
+    const res = await fetch('/updateBeat', {
+      body: JSON.stringify({
+        uid: sessionStorage.removeItem('uid'),
+        BeatID: beatID,
+        ...beatObject
       }),
       method: 'PUT',
       headers: {
@@ -136,7 +202,46 @@ async function saveBeat () {
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
     saveModal.toggle()
 
-    sendToastMessage('Beat successfully saved!', true)
+    sendToastMessage('Beat successfully updated!', true)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+/**
+ * Loads a specified beat into the workspace
+ * @param {string} id The ID of the beat to load into the workspace
+ */
+async function loadBeat (id) {
+  editing = true
+  currentBeatID = id
+
+  try {
+    const res = await fetch(`/readBeat?id=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        uid: sessionStorage.getItem('uid')
+      }
+    })
+
+    if (!res.ok) {
+      throw new Error('Request returned a non 200 response code')
+    }
+
+    const { data } = await res.json()
+    beatObject = data
+
+    const beatMatrix = beatObject.Beat
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < beatLength; col++) {
+        if (beatMatrix[row][col] !== '') {
+          $(`#track${row}-cell${col}`).addClass(getInstrumentFromMatrix(beatMatrix[row][col]))
+        }
+      }
+    }
+
+    sendToastMessage('Beat successfully loaded', true)
   } catch (err) {
     console.error(err)
   }
@@ -146,7 +251,7 @@ async function saveBeat () {
  * Reads in the beat matrix and plays back the audio
  */
 async function playBeat () {
-  const mappedMatrix = Object.values(beatMatrix)
+  const mappedMatrix = Object.values(beatObject.Beat)
 
   const soundBoard = new SoundBoard(mappedMatrix)
   await soundBoard.play(700)
@@ -160,13 +265,13 @@ async function playBeat () {
  */
 function setSpaceInstrument (row, col, element, instrument) {
   console.log('Set instrument space to ' + instrument)
+  const beatMatrix = beatObject.Beat
 
   if (beatMatrix[row][col] === '') {
     element.addClass(instrument)
     beatMatrix[row][col] = instrument + sampleIndex
   } else {
-    const len = beatMatrix[row][col].length
-    element.removeClass(beatMatrix[row][col].substring(0, len - 1))
+    element.removeClass(getInstrumentFromMatrix(beatMatrix[row][col]))
     beatMatrix[row][col] = '' // Eraser mode
   }
 
@@ -223,6 +328,15 @@ function sleep (delay) {
  */
 function enableTooltips () {
   $('[data-toggle="tooltip"]').tooltip()
+}
+
+/**
+ * Utility that strips the sample id off the item in a matrix space to get the instrument name
+ * @param {string} instrument The instrument at a specified matrix space
+ * @returns {string} The instrument type for that matrix space
+ */
+function getInstrumentFromMatrix (instrument) {
+  return instrument.substring(0, instrument.length - 1)
 }
 
 /**

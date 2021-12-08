@@ -23,6 +23,11 @@ h1 {
   background-color: #1F2833
 }
 
+.bg-info {
+  background-color: #66FCF1 !important;
+  color: #343a41;
+}
+
 .text-white {
   color: #C5C6C7 !important
 }
