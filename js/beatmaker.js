@@ -123,7 +123,7 @@ function bindToControlButtons () {
 
 async function saveBeat () {
   if (editing) {
-    await updateBeat()
+    await updateBeat(currentBeatID)
   } else {
     await createBeat()
   }
@@ -170,7 +170,11 @@ async function createBeat () {
   }
 }
 
-async function updateBeat () {
+/**
+ * Updates the currently open beat, this is fired when we are editing an existing beat
+ * @param {string} beatID The unique identifier for this beat
+ */
+async function updateBeat (beatID) {
   try {
     // Validate input first
     if (!validateSave()) {
@@ -181,7 +185,7 @@ async function updateBeat () {
     const res = await fetch('/updateBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
-        BeatID: currentBeatID,
+        BeatID: beatID,
         ...beatObject
       }),
       method: 'PUT',
@@ -204,6 +208,10 @@ async function updateBeat () {
   }
 }
 
+/**
+ * Loads a specified beat into the workspace
+ * @param {string} id The ID of the beat to load into the workspace
+ */
 async function loadBeat (id) {
   editing = true
   currentBeatID = id
