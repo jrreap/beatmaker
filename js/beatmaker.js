@@ -20,6 +20,7 @@ let beatObject = {
 // State
 let currentBeatID = ''
 let editing = false
+let catalog = false
 
 const beatLength = 24
 
@@ -53,9 +54,10 @@ function initialize () {
 
   const params = new URLSearchParams(window.location.search)
   const id = params.get('id')
+  const loadFromCatalog = params.get('catalog')
 
   if (id) {
-    loadBeat(id)
+    loadBeat(id, catalog)
   }
 }
 
@@ -121,31 +123,41 @@ function bindToControlButtons () {
   $('#save').on('click', saveBeat)
 }
 
+/**
+ * Handler function that determines how to save the beat depending on the editing state
+ */
 async function saveBeat () {
-  if (editing) {
+  if (editing && !catalog) {
     await updateBeat(currentBeatID)
   } else {
-    await createBeat()
+    await createBeat(catalog)
   }
 }
 
 /**
  * Saves the current beat in the workspace
+ * @param {boolean} isCatalog Whether or not this beat was loaded from the catalog
  */
-async function createBeat () {
+async function createBeat (isCatalog) {
   try {
+    const inputData = getSaveInputs()
+
     // Validate input first
-    if (!validateSave()) {
+    if (!validateSaveInputs(inputData.title, inputData.genre)) {
       sendToastMessage('Please fill out required fields!')
       return
     }
 
+    beatObject.Genre = inputData.genre
+    beatObject.Title = inputData.title
+
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
+        saveToCatalog: !isCatalog,
         ...beatObject
       }),
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -159,6 +171,8 @@ async function createBeat () {
     const json = await res.json()
     currentBeatID = json.data
     editing = true
+
+    updateMetaDisplay(beatObject.Title)
 
     // Toggle the bootstrap modal
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
@@ -176,11 +190,16 @@ async function createBeat () {
  */
 async function updateBeat (beatID) {
   try {
+    const inputData = getSaveInputs()
+
     // Validate input first
-    if (!validateSave()) {
+    if (!validateSaveInputs(inputData.title, inputData.genre)) {
       sendToastMessage('Please fill out required fields!')
       return
     }
+
+    beatObject.Title = inputData.title
+    beatObject.Genre = inputData.genre
 
     const res = await fetch('/updateBeat', {
       body: JSON.stringify({
@@ -211,13 +230,15 @@ async function updateBeat (beatID) {
 /**
  * Loads a specified beat into the workspace
  * @param {string} id The ID of the beat to load into the workspace
+ * @param {boolean} isCatalog Whether or not this beat should be loaded from the catalog
  */
-async function loadBeat (id) {
+async function loadBeat (id, isCatalog) {
   editing = true
   currentBeatID = id
+  catalog = isCatalog
 
   try {
-    const res = await fetch(`/readBeat?id=${id}`, {
+    const res = await fetch(`/readBeat?id=${id}&catalog=${isCatalog}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -231,6 +252,11 @@ async function loadBeat (id) {
 
     const { data } = await res.json()
     beatObject = data
+
+    $('#titleInput1').val(beatObject.Title)
+    $('#genreInput1').val(beatObject.Genre)
+
+    updateMetaDisplay(beatObject.Title)
 
     const beatMatrix = beatObject.Beat
     for (let row = 0; row < 6; row++) {
@@ -299,13 +325,34 @@ function sendToastMessage (message, success = false) {
 }
 
 /**
+ * Utility function that updates the metadata displayed for this beat
+ * @param {string} title The title of this beat
+ * @param {string} genre The genre of this beat (if applicable)
+ * @param {string} author The author of this beat (if applicable)
+ */
+function updateMetaDisplay (title, genre = '', author = '') {
+  $('#title').text(title)
+}
+
+/**
+ * Parses and returns the save modal input fields
+ * @returns {{ title: string, genre: string }} The parsed inputs as an object
+ */
+function getSaveInputs () {
+  const title = $('#titleInput1').val()
+  const genre = $('#genreInput1').val()
+
+  return { title, genre }
+}
+
+/**
  * Validates the current value of the save modal to make sure it's not empty
+ * @param {string} title The title for this beat
+ * @param {string} genre The genre for this beat
  * @returns {boolean} Whether the fields have been filled out properly, false if not
  */
-function validateSave () {
-  const titleField = $('#titleInput1').val()
-  console.log(titleField)
-  if (titleField === '') {
+function validateSaveInputs (title, genre) {
+  if (title === '' || genre === '') {
     return false
   }
 
