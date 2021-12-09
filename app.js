@@ -132,7 +132,7 @@ app.get('/readBeat', async (req, res) => {
 app.get('/readUserInfo', (req, res) => {
   readUsersBeats((result) => {
     if (result.success) {
-      res.status(200).send(result.data)
+      res.status(200).json({ data: result.data })
     } else {
       res.status(203).send(result.data)
     }
