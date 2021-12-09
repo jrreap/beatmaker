@@ -32,6 +32,10 @@ function readUsersBeats (callback) {
           })
           callback({ success: true, data })
         })
+        .catch(err => {
+          console.error(err)
+          callback({ success: false, data: err.message })
+        })
     } else {
       callback({ success: false, data: 'Cannot Access Users Beats' })
     }
