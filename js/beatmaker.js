@@ -130,15 +130,14 @@ async function saveBeat () {
   if (editing && !catalog) {
     await updateBeat(currentBeatID)
   } else {
-    await createBeat(catalog)
+    await createBeat()
   }
 }
 
 /**
  * Saves the current beat in the workspace
- * @param {boolean} isCatalog Whether or not this beat was loaded from the catalog
  */
-async function createBeat (isCatalog) {
+async function createBeat () {
   try {
     const inputData = getSaveInputs()
 
@@ -154,7 +153,6 @@ async function createBeat (isCatalog) {
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
-        saveToCatalog: !isCatalog,
         ...beatObject
       }),
       method: 'POST',

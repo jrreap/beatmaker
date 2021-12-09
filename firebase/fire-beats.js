@@ -81,16 +81,14 @@ function writeNewBeats (Author, Title, Genre, Description, Beat, saveToCatalog, 
       const userID = user.uid
       const beatReference = doc(collection(db, 'beats'))
       const newBeatId = beatReference.id
-      if (saveToCatalog) {
-        setDoc(beatReference, {
-          beatId: newBeatId,
-          Author: Author,
-          Title: Title,
-          Genre: Genre,
-          Description: Description,
-          Beat: Beat
-        })
-      }
+      setDoc(beatReference, {
+        beatId: newBeatId,
+        Author: Author,
+        Title: Title,
+        Genre: Genre,
+        Description: Description,
+        Beat: Beat
+      })
       setDoc(doc(db, 'users', userID, 'beats', newBeatId), {
         beatId: newBeatId,
         Author: Author,
