@@ -122,7 +122,7 @@ function bindToControlButtons () {
 }
 
 /**
- * Handler function that determines how to save the beat
+ * Handler function that determines how to save the beat depending on the editing state
  */
 async function saveBeat () {
   if (editing) {
@@ -137,8 +137,10 @@ async function saveBeat () {
  */
 async function createBeat () {
   try {
+    const inputData = getSaveInputs()
+
     // Validate input first
-    if (!validateSave()) {
+    if (!validateSaveInputs(inputData.title, inputData.genre)) {
       sendToastMessage('Please fill out required fields!')
       return
     }
@@ -182,7 +184,7 @@ async function createBeat () {
 async function updateBeat (beatID) {
   try {
     // Validate input first
-    if (!validateSave()) {
+    if (!validateSaveInputs()) {
       sendToastMessage('Please fill out required fields!')
       return
     }
@@ -316,13 +318,24 @@ function updateMetaDisplay (title, genre = '', author = '') {
 }
 
 /**
+ * Parses and returns the save modal input fields
+ * @returns {{ title: string, genre: string }} The parsed inputs as an object
+ */
+function getSaveInputs () {
+  const title = $('#titleInput1').val()
+  const genre = $('#genreInput1').val()
+
+  return { title, genre }
+}
+
+/**
  * Validates the current value of the save modal to make sure it's not empty
+ * @param {string} title The title for this beat
+ * @param {string} genre The genre for this beat
  * @returns {boolean} Whether the fields have been filled out properly, false if not
  */
-function validateSave () {
-  const titleField = $('#titleInput1').val()
-  console.log(titleField)
-  if (titleField === '') {
+function validateSaveInputs (title, genre) {
+  if (title === '' || genre === '') {
     return false
   }
 
