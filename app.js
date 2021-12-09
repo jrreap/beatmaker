@@ -84,14 +84,15 @@ app.post('/signOut', (req, res) => {
 // Firebase Fire Store
 /// ///////////////////
 
-app.put('/writeNewBeat', (req, res) => {
+app.post('/writeNewBeat', (req, res) => {
   const Author = req.body.Author
   const Title = req.body.Title
   const Genre = req.body.Genre
   const Description = req.body.Description
   const Beat = req.body.Beat
+  const saveToCatalog = req.body.saveToCatalog
 
-  writeNewBeats(Author, Title, Genre, Description, Beat, (result) => {
+  writeNewBeats(Author, Title, Genre, Description, Beat, saveToCatalog, (result) => {
     if (result.success) {
       res.status(200).send({ data: result.data })
     } else {
@@ -119,8 +120,13 @@ app.put('/updateBeat', (req, res) => {
 
 app.get('/readBeat', async (req, res) => {
   const beatId = req.query.id
-  console.log(beatId)
-  await readBeat(beatId, (result) => {
+  let catalog = req.query.catalog
+
+  if (!catalog) {
+    catalog = false
+  }
+
+  await readBeat(beatId, catalog, (result) => {
     if (result.success) {
       res.status(200).json({ data: result.data })
     } else {

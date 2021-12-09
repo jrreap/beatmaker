@@ -20,6 +20,7 @@ let beatObject = {
 // State
 let currentBeatID = ''
 let editing = false
+let catalog = false
 
 const beatLength = 24
 
@@ -53,9 +54,10 @@ function initialize () {
 
   const params = new URLSearchParams(window.location.search)
   const id = params.get('id')
+  const loadFromCatalog = params.get('catalog')
 
   if (id) {
-    loadBeat(id)
+    loadBeat(id, catalog)
   }
 }
 
@@ -125,17 +127,18 @@ function bindToControlButtons () {
  * Handler function that determines how to save the beat depending on the editing state
  */
 async function saveBeat () {
-  if (editing) {
+  if (editing && !catalog) {
     await updateBeat(currentBeatID)
   } else {
-    await createBeat()
+    await createBeat(catalog)
   }
 }
 
 /**
  * Saves the current beat in the workspace
+ * @param {boolean} isCatalog Whether or not this beat was loaded from the catalog
  */
-async function createBeat () {
+async function createBeat (isCatalog) {
   try {
     const inputData = getSaveInputs()
 
@@ -151,9 +154,10 @@ async function createBeat () {
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
+        saveToCatalog: !isCatalog,
         ...beatObject
       }),
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -226,13 +230,15 @@ async function updateBeat (beatID) {
 /**
  * Loads a specified beat into the workspace
  * @param {string} id The ID of the beat to load into the workspace
+ * @param {boolean} isCatalog Whether or not this beat should be loaded from the catalog
  */
-async function loadBeat (id) {
+async function loadBeat (id, isCatalog) {
   editing = true
   currentBeatID = id
+  catalog = isCatalog
 
   try {
-    const res = await fetch(`/readBeat?id=${id}`, {
+    const res = await fetch(`/readBeat?id=${id}&catalog=${isCatalog}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

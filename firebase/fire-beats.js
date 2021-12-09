@@ -42,41 +42,55 @@ function readUsersBeats (callback) {
   })
 }
 
-function readBeat (beatID, callback) {
+function readBeat (beatID, catalog, callback) {
   const db = getFirestore()
   const auth = getAuth()
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      getDoc(doc(db, 'users', user.uid, 'beats', beatID))
-        .then((doc) => {
-          callback({ success: true, data: doc.data() })
-        })
-        .catch(err => {
-          console.error(err)
-          callback({ success: false, data: err.message })
-        })
+      // Pull from the user beat if this isn't from the catalog
+      if (!catalog) {
+        getDoc(doc(db, 'users', user.uid, 'beats', beatID))
+          .then((doc) => {
+            callback({ success: true, data: doc.data() })
+          })
+          .catch(err => {
+            console.error(err)
+            callback({ success: false, data: err.message })
+          })
+      } else {
+        getDoc(doc(db, 'beats', beatID))
+          .then((doc) => {
+            callback({ success: true, data: doc.data() })
+          })
+          .catch(err => {
+            console.error(err)
+            callback({ success: false, data: err.message })
+          })
+      }
     } else {
       callback({ success: false, data: 'Cannot Access Users Beats' })
     }
   })
 }
 
-function writeNewBeats (Author, Title, Genre, Description, Beat, callback) {
+function writeNewBeats (Author, Title, Genre, Description, Beat, saveToCatalog, callback) {
   const db = getFirestore()
   const auth = getAuth()
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const userID = user.uid
-      const beatRefrence = doc(collection(db, 'beats'))
-      const newBeatId = beatRefrence.id
-      setDoc(beatRefrence, {
-        beatId: newBeatId,
-        Author: Author,
-        Title: Title,
-        Genre: Genre,
-        Description: Description,
-        Beat: Beat
-      })
+      const beatReference = doc(collection(db, 'beats'))
+      const newBeatId = beatReference.id
+      if (saveToCatalog) {
+        setDoc(beatReference, {
+          beatId: newBeatId,
+          Author: Author,
+          Title: Title,
+          Genre: Genre,
+          Description: Description,
+          Beat: Beat
+        })
+      }
       setDoc(doc(db, 'users', userID, 'beats', newBeatId), {
         beatId: newBeatId,
         Author: Author,
