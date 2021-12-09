@@ -145,6 +145,9 @@ async function createBeat () {
       return
     }
 
+    beatObject.Genre = inputData.genre
+    beatObject.Title = inputData.title
+
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
         uid: sessionStorage.removeItem('uid'),
@@ -183,11 +186,16 @@ async function createBeat () {
  */
 async function updateBeat (beatID) {
   try {
+    const inputData = getSaveInputs()
+
     // Validate input first
-    if (!validateSaveInputs()) {
+    if (!validateSaveInputs(inputData.title, inputData.genre)) {
       sendToastMessage('Please fill out required fields!')
       return
     }
+
+    beatObject.Title = inputData.title
+    beatObject.Genre = inputData.genre
 
     const res = await fetch('/updateBeat', {
       body: JSON.stringify({
@@ -238,6 +246,9 @@ async function loadBeat (id) {
 
     const { data } = await res.json()
     beatObject = data
+
+    $('#titleInput1').val(beatObject.Title)
+    $('#genreInput1').val(beatObject.Genre)
 
     updateMetaDisplay(beatObject.Title)
 
