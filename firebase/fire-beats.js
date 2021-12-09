@@ -1,4 +1,4 @@
-import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection } from 'firebase/firestore'
+import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection, getDocs } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 function readAllBeats (callback) {
@@ -24,10 +24,14 @@ function readUsersBeats (callback) {
   const auth = getAuth()
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const userID = user.uid
-      onSnapshot(doc(db, 'users', userID), (doc) => {
-        callback({ success: true, data: doc.data() })
-      })
+      getDocs(collection(db, 'users', user.uid, 'beats'))
+        .then(docs => {
+          const data = []
+          docs.forEach(doc => {
+            data.push(doc.data())
+          })
+          callback({ success: true, data })
+        })
     } else {
       callback({ success: false, data: 'Cannot Access Users Beats' })
     }
