@@ -1,24 +1,24 @@
 $(document).ready(function () {
-    initialize()
+  initialize()
 })
 
-function initialize() {
-    let sessionId = sessionStorage.getItem("uid")
-    $.ajax({
-        url: '/authenticateRoute',
-        type: 'POST',
-        data: { "uid": sessionId },
-        statusCode: {
-            200: function (result) {
-                if (result) {
-                    readUsersInfo()
-                }
-            },
-            203: function (result) {
-                window.location.href = '/index.html'
-            }
+function initialize () {
+  const sessionId = sessionStorage.getItem('uid')
+  $.ajax({
+    url: '/authenticateRoute',
+    type: 'POST',
+    headers: { uid: sessionId },
+    statusCode: {
+      200: function (result) {
+        if (result) {
+          readUsersInfo()
         }
-    });
+      },
+      203: function (result) {
+        window.location.href = '/index.html'
+      }
+    }
+  })
 }
 let  userObj = {};
 

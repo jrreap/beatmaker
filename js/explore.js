@@ -8,7 +8,9 @@ function initialize() {
   $.ajax({
     url: '/authenticateRoute',
     type: 'POST',
-    data: { uid: sessionId },
+    headers: {
+      uid: sessionId
+    }
     statusCode: {
       200: function (result) {
         if (result) {
