@@ -121,6 +121,9 @@ function bindToControlButtons () {
   $('#save').on('click', saveBeat)
 }
 
+/**
+ * Handler function that determines how to save the beat
+ */
 async function saveBeat () {
   if (editing) {
     await updateBeat(currentBeatID)
@@ -159,6 +162,8 @@ async function createBeat () {
     const json = await res.json()
     currentBeatID = json.data
     editing = true
+
+    updateMetaDisplay(beatObject.Title)
 
     // Toggle the bootstrap modal
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
@@ -232,6 +237,8 @@ async function loadBeat (id) {
     const { data } = await res.json()
     beatObject = data
 
+    updateMetaDisplay(beatObject.Title)
+
     const beatMatrix = beatObject.Beat
     for (let row = 0; row < 6; row++) {
       for (let col = 0; col < beatLength; col++) {
@@ -296,6 +303,16 @@ function sendToastMessage (message, success = false) {
   }
 
   bootstrap.Toast.getOrCreateInstance(toastElement).show()
+}
+
+/**
+ * Utility function that updates the metadata displayed for this beat
+ * @param {string} title The title of this beat
+ * @param {string} genre The genre of this beat (if applicable)
+ * @param {string} author The author of this beat (if applicable)
+ */
+function updateMetaDisplay (title, genre = '', author = '') {
+  $('#title').text(title)
 }
 
 /**
