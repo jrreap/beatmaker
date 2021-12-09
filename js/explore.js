@@ -1,4 +1,6 @@
-$(document).ready(initialize)
+//$(document).ready(initialize)
+$( window ).on( "load", initialize())
+
 
 /**
  * Called once on page load. This is where all of the initialization logic goes
@@ -30,6 +32,9 @@ function GetBeatsArray() {
       200: function (result) {
         if (result) {
           console.log(result) // Emily here is the array of beats 
+          //for each
+          for (const beat in result)  {displayBeats(beat)}
+//          result.forEach(displayBeats);
         }
       },
       203: function (result) {
@@ -37,4 +42,11 @@ function GetBeatsArray() {
       }
     }
   })
+}
+
+
+function displayBeats(beatJSON) {
+  const beat = JSON.parse(beatJSON)
+  console.log(beat)
+  $('.all-beats').append("<article class=\"beat\"><h2>" + beat.title + "</h2><h3>" + beat.author + "</h3></article>")
 }
