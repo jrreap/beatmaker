@@ -198,6 +198,7 @@ async function updateBeat (beatID) {
 
     beatObject.Title = inputData.title
     beatObject.Genre = inputData.genre
+    beatObject.Description = inputData.description
 
     const res = await fetch('/updateBeat', {
       body: JSON.stringify({
@@ -216,7 +217,7 @@ async function updateBeat (beatID) {
     }
 
     // Toggle the bootstrap modal
-    const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
+    const saveModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'))
     saveModal.toggle()
 
     sendToastMessage('Beat successfully updated!', true)
@@ -334,13 +335,14 @@ function updateMetaDisplay (title, genre = '', author = '') {
 
 /**
  * Parses and returns the save modal input fields
- * @returns {{ title: string, genre: string }} The parsed inputs as an object
+ * @returns {{ title: string, genre: string, description: string }} The parsed inputs as an object
  */
 function getSaveInputs () {
   const title = $('#titleInput1').val()
   const genre = $('#genreInput1').val()
+  const description = $('#descriptionInput1').val()
 
-  return { title, genre }
+  return { title, genre, description }
 }
 
 /**
@@ -349,8 +351,8 @@ function getSaveInputs () {
  * @param {string} genre The genre for this beat
  * @returns {boolean} Whether the fields have been filled out properly, false if not
  */
-function validateSaveInputs (title, genre) {
-  if (title === '' || genre === '') {
+function validateSaveInputs (title, genre, description) {
+  if (title === '' || genre === '' || description === '') {
     return false
   }
 
