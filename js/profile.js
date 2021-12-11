@@ -45,6 +45,9 @@ async function deleteBeat (beatId) {
     })
 
     generateBeatCards(userBeatData)
+
+    sendToastMessage('Successfully deleted beat!', true)
+    toggleConfirmModal()
   } catch (err) {
     console.error(err)
   }
@@ -113,6 +116,38 @@ function generateCard (row, beatObject) {
 
   // Bind to the delete button
   card.first('#delete').on('click', () => {
-    deleteBeat(beatObject.beatId)
+    $('#confirm').on('click', () => {
+      deleteBeat(beatObject.beatId)
+    })
+    toggleConfirmModal()
   }) 
+}
+
+/* Utility Functions */
+/**
+ * Sends a toast message and triggers it accordingly
+ * @param {string} message The message to be sent in the toast
+ * @param {boolean} success Whether this is a success message and should be styled as such
+ */
+ function sendToastMessage (message, success = false) {
+  const toastElement = $('#toast')
+  $('.toast-body').text(message)
+
+  if (success) {
+    toastElement.addClass('bg-success')
+    toastElement.removeClass('bg-info')
+  } else {
+    toastElement.removeClass('bg-success')
+    toastElement.addClass('bg-info')
+  }
+
+  bootstrap.Toast.getOrCreateInstance(toastElement).show()
+}
+
+/**
+ * Toggles the confirm modal from being opened or closed
+ */
+function toggleConfirmModal () {
+  const confirmModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmModal'))
+  confirmModal.toggle()
 }

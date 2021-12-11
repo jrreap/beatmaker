@@ -216,7 +216,7 @@ async function updateBeat (beatID) {
     }
 
     // Toggle the bootstrap modal
-    const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
+    const saveModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'))
     saveModal.toggle()
 
     sendToastMessage('Beat successfully updated!', true)
