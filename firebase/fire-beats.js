@@ -1,4 +1,4 @@
-import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection, getDocs } from 'firebase/firestore'
+import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection, getDocs, deleteDoc } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 function readAllBeats (callback) {
@@ -146,4 +146,19 @@ function updateBeat (Author, Title, Genre, Description, Beat, BeatId, callback) 
   })
 }
 
-export { readUsersBeats, readAllBeats, writeNewBeats, readBeat, updateBeat }
+function deleteBeat (beatId, callback) {
+  const db = getFirestore()
+  const auth = getAuth()
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      deleteDoc(doc(db, 'beats', beatId))
+      deleteDoc(doc(db, 'users', user.uid, 'beats', beatId))
+      callback({ success: true, data: 'Success' })
+    } else {
+      callback({ success: false, data: 'Beat was not deleted' })
+    }
+  })
+}
+
+export { readUsersBeats, readAllBeats, writeNewBeats, readBeat, updateBeat, deleteBeat }

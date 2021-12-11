@@ -1,3 +1,5 @@
+let userBeatData = []
+
 $(document).ready(function () {
   initialize()
 })
@@ -21,6 +23,33 @@ function initialize () {
   })
 }
 
+async function deleteBeat (beatId) {
+  try {
+    const res = await fetch('/deleteBeat', {
+      headers: {
+        'Content-Type': 'application/json',
+         uid: sessionStorage.getItem('uid')
+      },
+      body: JSON.stringify({
+        beatId
+      }),
+      method: 'DELETE'
+    })
+
+    if (!res.ok) {
+      throw new Error('Server responded with non 200 status code')
+    }
+
+    userBeatData = userBeatData.filter((beat) => {
+      return beat.beatId !== beatId
+    })
+
+    generateBeatCards(userBeatData)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 async function readUsersInfo () {
   try {
     const res = await fetch('/readUserInfo', {
@@ -37,24 +66,28 @@ async function readUsersInfo () {
 
     const { data } = await res.json()
 
-    for (let i = 0; i < data.length; i += 3) {
-      const group = data.slice(i, i + 3)
-      const row = createCardRow()
-      for (const beat of group) {
-        generateCard(row, beat)
-      }
-    }
+    userBeatData = data
+
+    generateBeatCards(userBeatData)
   } catch (err) {
     console.error(err)
   }
 }
 
-function addCreateButton () {
+function generateBeatCards(data) {
+  $('#cardrow').remove()
 
+  for (let i = 0; i < data.length; i += 3) {
+    const group = data.slice(i, i + 3)
+    const row = createCardRow()
+    for (const beat of group) {
+      generateCard(row, beat)
+    }
+  }
 }
 
 function createCardRow () {
-  const row = $('<div class="row mt-4"></div>')
+  const row = $('<div id="cardrow" class="row mt-4"></div>')
   $('#displayArea').append(row)
 
   return row
@@ -71,10 +104,15 @@ function generateCard (row, beatObject) {
     </div>
     <div class="card-footer">
       <a href="/beatmaker.html?id=${beatObject.beatId}" class="btn btn-primary">Edit Beat</a>
-      <a class="btn btn-outline-danger">Delete Beat</a>
+      <a id='delete' data-beat=${beatObject.beatId} class="btn btn-outline-danger">Delete Beat</a>
     </div>
   </div>
 </div>`)
 
   row.append(card)
+
+  // Bind to the delete button
+  card.first('#delete').on('click', () => {
+    deleteBeat(beatObject.beatId)
+  }) 
 }

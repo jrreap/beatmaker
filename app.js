@@ -3,7 +3,7 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
 import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
-import { writeNewBeats, readUsersBeats, readAllBeats, readBeat, updateBeat } from './firebase/fire-beats.js'
+import { writeNewBeats, readUsersBeats, readAllBeats, readBeat, updateBeat, deleteBeat } from './firebase/fire-beats.js'
 import { initializeApp } from 'firebase/app'
 import firebaseConfig from './firebase/fire-app.js'
 // import e from 'express';
@@ -149,6 +149,17 @@ app.get('/getAllBeats', (req, res) => {
   readAllBeats((result) => {
     if (result.success) {
       res.status(200).send(result.data)
+    } else {
+      res.status(203).send([])
+    }
+  })
+})
+
+app.delete('/deleteBeat', (req, res) => {
+  const beatId = req.body.beatId
+  deleteBeat(beatId, (result) => {
+    if (result.success) {
+      res.status(200).send('Success')
     } else {
       res.status(203).send([])
     }
