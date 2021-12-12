@@ -5,6 +5,9 @@ CISC474 Group 5 Project
 ### Install Instructions
 Install the necessary packages with `npm i`
 
+You must also include the app config titled `fire-app.js` inside the `./firebase` directory
+This config is needed to initialize our connection with firestore
+
 Then run the main server with
 `npm start`
 ### Group Names 
