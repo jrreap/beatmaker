@@ -2,7 +2,6 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, on
 import { getFirestore, doc, setDoc } from "firebase/firestore"
 
 
-
 function createNewUser(email, password, name, callback) {
     const auth = getAuth();
     const db = getFirestore();
@@ -28,8 +27,8 @@ function signInUser(email, password, callback) {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const userId = userCredential.user.uid
-            callback({ "success": true, "userId": userId })
+            const uid = userCredential.user.uid
+            callback({ "success": true, "userId": uid })
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -55,6 +54,15 @@ function sessionAuth(uid, callback) {
 
 }
 
+async function authMiddleware(req, res, next) {
+    if (!req.headers.uid) {
+        res.status(401).send('Not signed in')
+    } else {
+        req.uid = req.headers.uid
+        next()
+    }
+}
+
 function signOutUser(callback) {
     const auth = getAuth();
     signOut(auth).then(() => {
@@ -64,4 +72,4 @@ function signOutUser(callback) {
     });
 }
 
-export { createNewUser, signInUser, sessionAuth, signOutUser }
+export { createNewUser, signInUser, sessionAuth, signOutUser, authMiddleware }

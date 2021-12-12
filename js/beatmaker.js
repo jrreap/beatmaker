@@ -29,7 +29,8 @@ $(document).ready(async () => {
     const res = await fetch('/authenticateRoute', {
       method: 'POST',
       headers: {
-        uid: sessionStorage.getItem('uid')
+        uid: sessionStorage.getItem('uid'),
+        'Content-Type': 'application/json'
       }
     })
 
@@ -152,11 +153,11 @@ async function createBeat () {
 
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
-        uid: sessionStorage.removeItem('uid'),
         ...beatObject
       }),
       method: 'POST',
       headers: {
+        uid: sessionStorage.getItem('uid'),
         'Content-Type': 'application/json'
       }
     })
@@ -202,13 +203,13 @@ async function updateBeat (beatID) {
 
     const res = await fetch('/updateBeat', {
       body: JSON.stringify({
-        uid: sessionStorage.removeItem('uid'),
         BeatID: beatID,
         ...beatObject
       }),
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        uid: sessionStorage.removeItem('uid')
       }
     })
 

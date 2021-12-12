@@ -2,12 +2,10 @@ import express from 'express'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import bodyParser from 'body-parser'
-import { createNewUser, signInUser, sessionAuth, signOutUser } from './firebase/fire-auth.js'
+import { createNewUser, signInUser, sessionAuth, signOutUser, authMiddleware } from './firebase/fire-auth.js'
 import { writeNewBeats, readUsersBeats, readAllBeats, readBeat, updateBeat, deleteBeat } from './firebase/fire-beats.js'
 import { initializeApp } from 'firebase/app'
 import firebaseConfig from './firebase/fire-app.js'
-// import e from 'express';
-// import { resourceLimits } from 'worker_threads';
 
 const app = express()
 const port = 8080
@@ -38,7 +36,7 @@ app.post('/authenticateRoute', (req, res) => {
   const sessionUID = req.headers.uid
   sessionAuth(sessionUID, (result) => {
     if (result.isLogedIn) {
-      res.status(200).send(result.userId)
+      res.status(200).json({ uid: result.userId })
     } else {
       res.status(203).send(result.error)
     }
@@ -63,7 +61,7 @@ app.post('/login', (req, res) => {
   const password = req.body.password
   signInUser(email, password, (result) => {
     if (result.success) {
-      res.status(200).send(result.userId)
+      res.status(200).json({ uid: result.userId })
     } else {
       res.status(203).send(result.error)
     }
@@ -84,6 +82,8 @@ app.post('/signOut', (req, res) => {
 // Firebase Fire Store
 /// ///////////////////
 
+app.use(authMiddleware)
+
 app.post('/writeNewBeat', (req, res) => {
   const Author = req.body.Author
   const Title = req.body.Title
@@ -91,8 +91,9 @@ app.post('/writeNewBeat', (req, res) => {
   const Description = req.body.Description
   const Beat = req.body.Beat
   const saveToCatalog = req.body.saveToCatalog
+  const uid = req.uid
 
-  writeNewBeats(Author, Title, Genre, Description, Beat, saveToCatalog, (result) => {
+  writeNewBeats(uid, Author, Title, Genre, Description, Beat, saveToCatalog, (result) => {
     if (result.success) {
       res.status(200).send({ data: result.data })
     } else {
@@ -108,8 +109,9 @@ app.put('/updateBeat', (req, res) => {
   const Description = req.body.Description
   const Beat = req.body.Beat
   const BeatID = req.body.BeatID
+  const uid = req.uid
 
-  updateBeat(Author, Title, Genre, Description, Beat, BeatID, (result) => {
+  updateBeat(uid, Author, Title, Genre, Description, Beat, BeatID, (result) => {
     if (result.success) {
       res.status(200).json({ data: result.data })
     } else {
@@ -118,15 +120,16 @@ app.put('/updateBeat', (req, res) => {
   })
 })
 
-app.get('/readBeat', async (req, res) => {
+app.get('/readBeat', (req, res) => {
   const beatId = req.query.id
+  const uid = req.uid
   let catalog = req.query.catalog
 
   if (!catalog) {
     catalog = false
   }
 
-  await readBeat(beatId, catalog, (result) => {
+  readBeat(uid, beatId, catalog, (result) => {
     if (result.success) {
       res.status(200).json({ data: result.data })
     } else {
@@ -136,7 +139,7 @@ app.get('/readBeat', async (req, res) => {
 })
 
 app.get('/readUserInfo', (req, res) => {
-  readUsersBeats((result) => {
+  readUsersBeats(req.uid, (result) => {
     if (result.success) {
       res.status(200).json({ data: result.data })
     } else {
@@ -157,7 +160,8 @@ app.get('/getAllBeats', (req, res) => {
 
 app.delete('/deleteBeat', (req, res) => {
   const beatId = req.body.beatId
-  deleteBeat(beatId, (result) => {
+  const uid = req.uid
+  deleteBeat(uid, beatId, (result) => {
     if (result.success) {
       res.status(200).send('Success')
     } else {

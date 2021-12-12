@@ -1,7 +1,7 @@
 import { getFirestore, doc, setDoc, onSnapshot, getDoc, collection, getDocs, deleteDoc } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
-function readAllBeats (callback) {
+function readAllBeats(callback) {
   const db = getFirestore()
   const auth = getAuth()
   onAuthStateChanged(auth, (user) => {
@@ -19,89 +19,67 @@ function readAllBeats (callback) {
   })
 }
 
-function readUsersBeats (callback) {
+function readUsersBeats(uid, callback) {
   const db = getFirestore()
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      getDocs(collection(db, 'users', user.uid, 'beats'))
-        .then(docs => {
-          const data = []
-          docs.forEach(doc => {
-            data.push(doc.data())
-          })
-          callback({ success: true, data })
-        })
-        .catch(err => {
-          console.error(err)
-          callback({ success: false, data: err.message })
-        })
-    } else {
-      callback({ success: false, data: 'Cannot Access Users Beats' })
-    }
-  })
+  getDocs(collection(db, 'users', uid, 'beats'))
+    .then(docs => {
+      const data = []
+      docs.forEach(doc => {
+        data.push(doc.data())
+      })
+      callback({ success: true, data })
+    })
+    .catch(err => {
+      console.error(err)
+      callback({ success: false, data: err.message })
+    })
 }
 
-function readBeat (beatID, catalog, callback) {
+function readBeat(uid, beatID, catalog, callback) {
   const db = getFirestore()
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // Pull from the user beat if this isn't from the catalog
-      if (!catalog) {
-        getDoc(doc(db, 'users', user.uid, 'beats', beatID))
-          .then((doc) => {
-            callback({ success: true, data: doc.data() })
-          })
-          .catch(err => {
-            console.error(err)
-            callback({ success: false, data: err.message })
-          })
-      } else {
-        getDoc(doc(db, 'beats', beatID))
-          .then((doc) => {
-            callback({ success: true, data: doc.data() })
-          })
-          .catch(err => {
-            console.error(err)
-            callback({ success: false, data: err.message })
-          })
-      }
-    } else {
-      callback({ success: false, data: 'Cannot Access Users Beats' })
-    }
-  })
+  // Pull from the user beat if this isn't from the catalog
+  if (!catalog) {
+    getDoc(doc(db, 'users', uid, 'beats', beatID))
+      .then((doc) => {
+        callback({ success: true, data: doc.data() })
+      })
+      .catch(err => {
+        console.error(err)
+        callback({ success: false, data: err.message })
+      })
+  } else {
+    getDoc(doc(db, 'beats', beatID))
+      .then((doc) => {
+        callback({ success: true, data: doc.data() })
+      })
+      .catch(err => {
+        console.error(err)
+        callback({ success: false, data: err.message })
+      })
+  }
 }
 
-function writeNewBeats (Author, Title, Genre, Description, Beat, saveToCatalog, callback) {
+function writeNewBeats(uid, Author, Title, Genre, Description, Beat, saveToCatalog, callback) {
   const db = getFirestore()
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const userID = user.uid
-      const beatReference = doc(collection(db, 'beats'))
-      const newBeatId = beatReference.id
-      setDoc(beatReference, {
-        beatId: newBeatId,
-        Author: Author,
-        Title: Title,
-        Genre: Genre,
-        Description: Description,
-        Beat: Beat
-      })
-      setDoc(doc(db, 'users', userID, 'beats', newBeatId), {
-        beatId: newBeatId,
-        Author: Author,
-        Title: Title,
-        Genre: Genre,
-        Description: Description,
-        Beat: Beat
-      })
-      callback({ success: true, data: newBeatId })
-    } else {
-      callback({ success: false, data: 'Beat was not Uploaded' })
-    }
+  const beatReference = doc(collection(db, 'beats'))
+  const newBeatId = beatReference.id
+  setDoc(beatReference, {
+    beatId: newBeatId,
+    Author: Author,
+    Title: Title,
+    Genre: Genre,
+    Description: Description,
+    Beat: Beat
   })
+  setDoc(doc(db, 'users', uid, 'beats', newBeatId), {
+    beatId: newBeatId,
+    Author: Author,
+    Title: Title,
+    Genre: Genre,
+    Description: Description,
+    Beat: Beat
+  })
+  callback({ success: true, data: newBeatId })
 }
 
 /**
@@ -117,48 +95,42 @@ function writeNewBeats (Author, Title, Genre, Description, Beat, saveToCatalog, 
  * @param {function} callback: Call back function that returns the beat id on success
 
  */
-function updateBeat (Author, Title, Genre, Description, Beat, BeatId, callback) {
+async function updateBeat(uid, Author, Title, Genre, Description, Beat, BeatId, callback) {
   const db = getFirestore()
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const userID = user.uid
-      setDoc(doc(db, 'beats', BeatId), {
-        beatId: BeatId,
-        Author: Author,
-        Title: Title,
-        Genre: Genre,
-        Description: Description,
-        Beat: Beat
-      })
-      setDoc(doc(db, 'users', userID, 'beats', BeatId), {
-        beatId: BeatId,
-        Author: Author,
-        Title: Title,
-        Genre: Genre,
-        Description: Description,
-        Beat: Beat
-      })
-      callback({ success: true, data: BeatId })
-    } else {
-      callback({ success: false, data: 'Beat was not Uploaded' })
-    }
-  })
+  try {
+    await setDoc(doc(db, 'beats', BeatId), {
+      beatId: BeatId,
+      Author: Author,
+      Title: Title,
+      Genre: Genre,
+      Description: Description,
+      Beat: Beat
+    })
+    await setDoc(doc(db, 'users', uid, 'beats', BeatId), {
+      beatId: BeatId,
+      Author: Author,
+      Title: Title,
+      Genre: Genre,
+      Description: Description,
+      Beat: Beat
+    })
+    callback({ success: true, data: BeatId })
+  } catch (err) {
+    console.error(err)
+    callback({ success: false, data: err.message })
+  }
 }
 
-function deleteBeat (beatId, callback) {
+async function deleteBeat(uid, beatId, callback) {
   const db = getFirestore()
-  const auth = getAuth()
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      deleteDoc(doc(db, 'beats', beatId))
-      deleteDoc(doc(db, 'users', user.uid, 'beats', beatId))
-      callback({ success: true, data: 'Success' })
-    } else {
-      callback({ success: false, data: 'Beat was not deleted' })
-    }
-  })
+  try {
+    await deleteDoc(doc(db, 'beats', beatId))
+    await deleteDoc(doc(db, 'users', uid, 'beats', beatId))
+    callback({ success: true, data: 'Success' })
+  } catch (err) {
+    console.error(err)
+    callback({ success: false, data: 'Beat was not deleted' })
+  }
 }
 
 export { readUsersBeats, readAllBeats, writeNewBeats, readBeat, updateBeat, deleteBeat }

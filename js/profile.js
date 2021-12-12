@@ -6,6 +6,7 @@ $(document).ready(function () {
 
 function initialize () {
   const sessionId = sessionStorage.getItem('uid')
+  console.log(sessionId)
   $.ajax({
     url: '/authenticateRoute',
     type: 'POST',
