@@ -256,6 +256,7 @@ async function loadBeat (id, isCatalog) {
 
     $('#titleInput1').val(beatObject.Title)
     $('#genreInput1').val(beatObject.Genre)
+    $('#descriptionInput1').val(beatObject.Description)
 
     updateMetaDisplay(beatObject.Title)
 
