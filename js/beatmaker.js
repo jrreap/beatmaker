@@ -150,6 +150,7 @@ async function createBeat () {
 
     beatObject.Genre = inputData.genre
     beatObject.Title = inputData.title
+    beatObject.Description = inputData.description
 
     const res = await fetch('/writeNewBeat', {
       body: JSON.stringify({
