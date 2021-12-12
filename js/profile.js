@@ -4,7 +4,7 @@ $(document).ready(function () {
   initialize()
 })
 
-function initialize () {
+function initialize() {
   const sessionId = sessionStorage.getItem('uid')
   console.log(sessionId)
   $.ajax({
@@ -24,12 +24,12 @@ function initialize () {
   })
 }
 
-async function deleteBeat (beatId) {
+async function deleteBeat(beatId) {
   try {
     const res = await fetch('/deleteBeat', {
       headers: {
         'Content-Type': 'application/json',
-         uid: sessionStorage.getItem('uid')
+        uid: sessionStorage.getItem('uid')
       },
       body: JSON.stringify({
         beatId
@@ -54,7 +54,7 @@ async function deleteBeat (beatId) {
   }
 }
 
-async function readUsersInfo () {
+async function readUsersInfo() {
   try {
     const res = await fetch('/readUserInfo', {
       headers: {
@@ -81,6 +81,11 @@ async function readUsersInfo () {
 function generateBeatCards(data) {
   $('#cardrow').remove()
 
+  if (data.length === 0) {
+    $('#warning').removeClass('d-none')
+    return
+  }
+
   for (let i = 0; i < data.length; i += 3) {
     const group = data.slice(i, i + 3)
     const row = createCardRow()
@@ -90,14 +95,14 @@ function generateBeatCards(data) {
   }
 }
 
-function createCardRow () {
+function createCardRow() {
   const row = $('<div id="cardrow" class="row mt-4"></div>')
   $('#displayArea').append(row)
 
   return row
 }
 
-function generateCard (row, beatObject) {
+function generateCard(row, beatObject) {
   const card = $(`<div class="col-4">
   <div class="card p-2 bg-dark">
     <div class="card-header">
@@ -121,7 +126,7 @@ function generateCard (row, beatObject) {
       deleteBeat(beatObject.beatId)
     })
     toggleConfirmModal()
-  }) 
+  })
 }
 
 /* Utility Functions */
@@ -130,7 +135,7 @@ function generateCard (row, beatObject) {
  * @param {string} message The message to be sent in the toast
  * @param {boolean} success Whether this is a success message and should be styled as such
  */
- function sendToastMessage (message, success = false) {
+function sendToastMessage(message, success = false) {
   const toastElement = $('#toast')
   $('.toast-body').text(message)
 
@@ -148,7 +153,7 @@ function generateCard (row, beatObject) {
 /**
  * Toggles the confirm modal from being opened or closed
  */
-function toggleConfirmModal () {
+function toggleConfirmModal() {
   const confirmModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmModal'))
   confirmModal.toggle()
 }

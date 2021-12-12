@@ -91,6 +91,16 @@
     background-color: #EBFF99;
 }
 
+.song-title {
+    font-size: 35px;
+    color: #66FCF1;
+}
+
+.song-meta {
+    font-size: 25px;
+    color: #66FCF1;
+}
+
 /* Bootstrap Overrides */
 .card-header {
     background-color: grey;
