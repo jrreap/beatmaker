@@ -58,7 +58,7 @@ function initialize () {
   const loadFromCatalog = params.get('catalog')
 
   if (id) {
-    loadBeat(id, catalog)
+    loadBeat(id, loadFromCatalog)
   }
 }
 
@@ -149,7 +149,7 @@ async function createBeat () {
     }
 
     beatObject.Genre = inputData.genre
-    beatObject.Title = inputData.title
+    beatObject.Title = catalog ? 'Copy of ' + inputData.title : inputData.title
     beatObject.Description = inputData.description
 
     const res = await fetch('/writeNewBeat', {
@@ -171,6 +171,7 @@ async function createBeat () {
     const json = await res.json()
     currentBeatID = json.data
     editing = true
+    catalog = false
 
     updateMetaDisplay(beatObject.Title)
 
@@ -178,7 +179,9 @@ async function createBeat () {
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
     saveModal.toggle()
 
-    sendToastMessage('Beat successfully saved!', true)
+    const message = catalog ? 'Beat successfully copied!' : 'Beat successfully saved!'
+
+    sendToastMessage(message, true)
   } catch (err) {
     console.error(err)
   }
