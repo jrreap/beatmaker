@@ -411,7 +411,7 @@ function SoundBoard (mappedMatrix) {
  * @async
  */
 SoundBoard.prototype.play = async function (delay = 500) {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < beatLength; i++) {
     this.board[i].play()
     await sleep(delay)
   }
