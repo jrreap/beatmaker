@@ -61,7 +61,7 @@ app.post('/login', (req, res) => {
   const password = req.body.password
   signInUser(email, password, (result) => {
     if (result.success) {
-      res.status(200).json({ uid: result.userId })
+      res.status(200).json({ uid: result.userId, userData: result.userData })
     } else {
       res.status(203).send(result.error)
     }

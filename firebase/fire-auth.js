@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore"
 
 
@@ -28,7 +28,9 @@ function signInUser(email, password, callback) {
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const uid = userCredential.user.uid
-            callback({ "success": true, "userId": uid })
+            const userData = { name: userCredential.user.displayName, email: userCredential.user.email }
+            console.log(userData)
+            callback({ "success": true, "userId": uid, "userData": userData })
         })
         .catch((error) => {
             const errorCode = error.code;

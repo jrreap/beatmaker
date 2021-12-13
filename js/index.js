@@ -27,9 +27,10 @@ $(document).ready(function () {
         return
       }
 
-      const { uid } = await res.json()
+      const { uid, userData } = await res.json()
 
       sessionStorage.setItem('uid', uid)
+      sessionStorage.setItem('username', userData.name)
       window.location.href = '/profile.html'
     } catch (err) {
       console.error(err)
