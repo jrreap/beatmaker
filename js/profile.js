@@ -80,7 +80,9 @@ async function readUsersInfo() {
 }
 
 function generateBeatCards(data) {
-  $('#cardrow').remove()
+  $('.cardrow').each((num, ele) => {
+    ele.remove()
+  })
 
   if (data.length === 0) {
     $('#warning').removeClass('d-none')
@@ -97,7 +99,7 @@ function generateBeatCards(data) {
 }
 
 function createCardRow() {
-  const row = $('<div id="cardrow" class="row mt-4"></div>')
+  const row = $('<div class="row cardrow mt-4"></div>')
   $('#displayArea').append(row)
 
   return row
