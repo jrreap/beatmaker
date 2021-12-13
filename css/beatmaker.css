@@ -93,11 +93,13 @@
 
 .song-title {
     font-size: 35px;
+    font-weight: 600;
     color: #66FCF1;
 }
 
 .song-meta {
     font-size: 25px;
+    font-weight: 300;
     color: #66FCF1;
 }
 
@@ -121,4 +123,9 @@
 
 .beat-pad-btn-row-4 button {
     background-color: #FF99FF;
+}
+
+.btn-control {
+    width: 100px;
+    margin: 10px;
 }

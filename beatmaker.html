@@ -84,8 +84,7 @@
                         <div class="row">
                             <div class="mb-3 mt-3 text-start">
                                 <label for="genreInput1" class="form-label">Genre</label>
-                                <input type="text" placeholder="HipHop" class="form-control"
-                                    id="genreInput1">
+                                <input type="text" placeholder="HipHop" class="form-control" id="genreInput1">
                             </div>
                         </div>
                         <div class="row">
@@ -104,36 +103,26 @@
             </div>
         </div>
 
-        <div class="row header p-1 mt-4 mb-4 justify-content-center">
+        <div class="row header p-1 m-4">
             <div class="col-4">
-                <h2 class='song-title' id='title'>Untitled Beat</h2>
+                <h2 class='song-title text-start' id='title'>Untitled Beat</h2>
+                <h2 class="song-meta text-start">Author | Genre</h2>
+            </div>
+            <div class="col-5">
+
+            </div>
+            <div class="col-3">
+                <div class="row justify-content-center align-items-center h-100">
+                    <a id="saveBtn" alt="save" class="btn btn-primary btn-control p-2" data-bs-toggle="modal"
+                        data-bs-target="#saveModal" data-toggle="tooltip" data-placement="top" title="Save"><i
+                            class="fas fa-save fa-lg"></i></a>
+                    <a id="play" alt="play" class="btn btn-primary btn-control p-2" data-toggle="tooltip"
+                        data-placement="top" title="Play"><i class="fas fa-play fa-lg"></i></a>
+                </div>
             </div>
         </div>
         <div id="workspace">
 
-        </div>
-        <div class="row justify-content-end align-items-center bg-dark p-4">
-            <div class="col-4">
-                <div class="card border-secondary bg-dark">
-                    <div class="card-header">
-                        Controls
-                    </div>
-                    <div class="card-body">
-                        <div class="row gy-2 mb-2 justify-content-center align-items-center">
-                            <div class="col-3">
-                                <a id="saveBtn" alt="save" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#saveModal" data-toggle="tooltip" data-placement="top"
-                                    title="Save"><i class="fas fa-save"></i></a>
-                            </div>
-                            <div class="col-3">
-                                <a id="play" alt="play" class="btn btn-primary" data-toggle="tooltip"
-                                    data-placement="top" title="Play"><i class="fas fa-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
         </div>
     </div>
 
