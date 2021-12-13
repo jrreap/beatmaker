@@ -55,7 +55,7 @@ function generateBeatCards(data) {
     let genre = beat.genre
     let beatId = beat.beatId
 
-    let imageNumber = Math.floor(Math.random() * 20) % 4
+    let imageNumber = Math.floor(Math.random() * 20) % 7
     let imagePath = `./Assets/${imageNumber}.jpg`
     if (description == undefined) {
       description = ""
