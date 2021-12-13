@@ -21,14 +21,10 @@ $(document).ready(function () {
         return
       }
 
-      console.log(res)
-
       const { uid } = await res.json()
 
-      console.log(uid)
-
       sessionStorage.setItem('uid', uid)
-      window.location.href = '/beatmaker.html'
+      window.location.href = '/profile.html'
     } catch (err) {
       console.error(err)
       display_alert('Unknown error occurred', 'danger')
