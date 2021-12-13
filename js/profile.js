@@ -15,6 +15,7 @@ function initialize() {
       200: function (result) {
         if (result) {
           readUsersInfo()
+          logoutBtn()
         }
       },
       203: function (result) {
@@ -156,4 +157,26 @@ function sendToastMessage(message, success = false) {
 function toggleConfirmModal() {
   const confirmModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmModal'))
   confirmModal.toggle()
+}
+
+/**
+ * Logout function to trigger on button click
+ */
+function logoutBtn () {
+  $('#logout-btn').on('click', function (e) {
+    $.ajax({
+      url: '/signOut',
+      type: 'POST',
+      statusCode: {
+        200: function () {
+          sessionStorage.removeItem('uid')
+          window.location.href = '/'
+        },
+        500: function (result) {
+          console.log(result)
+          // display_alert(result.replace("Firebase: ", ''), 'danger')
+        }
+      }
+    })
+  })
 }

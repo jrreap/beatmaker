@@ -10,11 +10,12 @@ function initialize() {
     type: 'POST',
     headers: {
       uid: sessionId
-    }
+    },
     statusCode: {
       200: function (result) {
         if (result) {
           GetBeatsArray()
+          logoutBtn()
         }
       },
       203: function (result) {
@@ -38,5 +39,27 @@ function GetBeatsArray() {
         console.log(result)
       }
     }
+  })
+}
+
+/**
+ * Logout function to trigger on button click
+ */
+ function logoutBtn () {
+  $('#logout-btn').on('click', function (e) {
+    $.ajax({
+      url: '/signOut',
+      type: 'POST',
+      statusCode: {
+        200: function () {
+          sessionStorage.removeItem('uid')
+          window.location.href = '/'
+        },
+        500: function (result) {
+          console.log(result)
+          // display_alert(result.replace("Firebase: ", ''), 'danger')
+        }
+      }
+    })
   })
 }

@@ -62,6 +62,9 @@ function initialize () {
   }
 }
 
+/**
+ * Logout function to trigger on button click
+ */
 function logoutBtn () {
   $('#logout-btn').on('click', function (e) {
     $.ajax({
@@ -70,7 +73,7 @@ function logoutBtn () {
       statusCode: {
         200: function (userID) {
           sessionStorage.removeItem('uid')
-          window.location.href = '/beatmaker.html'
+          window.location.href = '/'
         },
         500: function (result) {
           console.log(result)
