@@ -16,6 +16,7 @@ function initialize() {
         if (result) {
           readUsersInfo()
           logoutBtn()
+          readUserBeats()
         }
       },
       203: function (result) {
@@ -55,6 +56,29 @@ async function deleteBeat(beatId) {
   }
 }
 
+async function readUserBeats() {
+  try {
+
+    const res = await fetch('/readUserBeats', {
+      headers: {
+        'Content-Type': 'application/json',
+        uid: sessionStorage.getItem('uid')
+      },
+      method: 'GET'
+    })
+
+    if (!res.ok) {
+      throw new Error('Response returned with non 200 error code')
+    }
+
+    const { data } = await res.json()
+    userBeatData = data
+    generateBeatCards(userBeatData)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 async function readUsersInfo() {
   try {
     const res = await fetch('/readUserInfo', {
@@ -70,16 +94,17 @@ async function readUsersInfo() {
     }
 
     const { data } = await res.json()
-
     userBeatData = data
 
-    generateBeatCards(userBeatData)
+    $("#user-name").append(data.name)
+
   } catch (err) {
     console.error(err)
   }
 }
 
 function generateBeatCards(data) {
+  console.log(data)
   $('#cardrow').remove()
 
   if (data.length === 0) {
@@ -162,7 +187,7 @@ function toggleConfirmModal() {
 /**
  * Logout function to trigger on button click
  */
-function logoutBtn () {
+function logoutBtn() {
   $('#logout-btn').on('click', function (e) {
     $.ajax({
       url: '/signOut',

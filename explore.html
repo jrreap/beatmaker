@@ -17,52 +17,35 @@
 </head>
 
 <body>
-  <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">BeatMaker</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="studio" href="./beatmaker.html">Studio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./profile.html">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="./explore.html">Explore</a>
-          </li>
-        </ul>
-        <ul class='navbar-nav justify-content-end w-100'>
-          <li class="nav-item align-self-end">
-            <input type='submit' id='logout-btn' class='btn btn-dark nav-link' value='Logout'>
-          </li>
-        </ul>
+  <div id="particles">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">BeatMaker</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="./beatmaker.html">Studio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./profile.html">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="./explore.html">Explore</a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
-  <div class="container-fluid h-100">
-    <h1 class="display-1">Explore Beats</h1>
+    </nav>
+    <div class="container-fluid h-100 position-absolute">
+      <h1 class="display-1">Explore Beats</h1>
+      <div class="container" style="padding: 3%;">
+        <div class="row" id="allBeatCards"></div>
 
-    <p><br></p>
-
-
-    <ul id="menu">
-      <li><a href="#">Beat 1</a></li>
-      <li><a href="#">Beat 2</a></li>
-      <li><a href="#">Beat 3</a></li>
-      <li><a href="#">Beat 4</a></li>
-    </ul>
-  </div>
-
-  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-    <div class="col-md-4 d-flex align-items-center p-1">
-      <span class="text-muted">v1.0 | © 2021 BeatMaker Inc.</span>
-    </div>
-  </footer>
+      </div>
 </body>
 
 </html>

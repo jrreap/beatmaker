@@ -15,7 +15,6 @@ function initialize() {
       200: function (result) {
         if (result) {
           GetBeatsArray()
-          logoutBtn()
         }
       },
       203: function (result) {
@@ -32,34 +31,49 @@ function GetBeatsArray() {
     statusCode: {
       200: function (result) {
         if (result) {
-          console.log(result) // Emily here is the array of beats 
+
+          const allBeatCards = $('#allBeatCards')
+          for (beat of result) {
+            let title = beat.Title
+            let author = beat.Author
+            let beatMatrix = beat.beat
+            let description = beat.description
+            let genre = beat.genre
+            let beatId = beat.beatId
+
+            let imageNumber = Math.floor(Math.random() * 20) % 4
+            let imagePath = `./Assets/${imageNumber}.jpg`
+            if (description == undefined) {
+              description = ""
+            }
+
+            const colDiv = $(`<div class="col" style="margin:2%">`)
+            allBeatCards.append(colDiv)
+
+            const card = $(`<div class="card" style="width: 12rem;">`)
+            colDiv.append(card)
+
+            const image = $(`<img class="card-img-top" src="${imagePath}" alt="Card image cap">`)
+            card.append(image)
+
+            const cardBody = $(`<div class="card-body">`)
+            card.append(cardBody)
+
+            const cardTitle = $(`<h5 class="card-title">${title}</h5>`)
+            cardBody.append(cardTitle)
+
+            const cardAuthor = $(` <p class="card-text">${author}</p>`)
+            cardBody.append(cardAuthor)
+
+            const cardGoToBeat = $(`<a href="/beatmaker.html?id=${beatId}" class="btn btn-primary">View Beat</a>`)
+            cardBody.append(cardGoToBeat)
+          }
+
         }
       },
       203: function (result) {
         console.log(result)
       }
     }
-  })
-}
-
-/**
- * Logout function to trigger on button click
- */
- function logoutBtn () {
-  $('#logout-btn').on('click', function (e) {
-    $.ajax({
-      url: '/signOut',
-      type: 'POST',
-      statusCode: {
-        200: function () {
-          sessionStorage.removeItem('uid')
-          window.location.href = '/'
-        },
-        500: function (result) {
-          console.log(result)
-          // display_alert(result.replace("Firebase: ", ''), 'danger')
-        }
-      }
-    })
   })
 }

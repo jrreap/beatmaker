@@ -19,14 +19,29 @@ function readAllBeats(callback) {
   })
 }
 
+
 function readUsersBeats(uid, callback) {
   const db = getFirestore()
-  getDocs(collection(db, 'users', uid, 'beats'))
+  getDocs(collection(db, "users", uid, "beats"))
     .then(docs => {
-      const data = []
-      docs.forEach(doc => {
-        data.push(doc.data())
-      })
+      const beats = []
+      docs.forEach((doc) => {
+        beats.push(doc.data())
+      });
+      callback({ success: true, data: beats })
+    })
+    .catch(err => {
+      console.error(err)
+      callback({ success: false, data: err.message })
+    })
+}
+
+
+function readUsersInfo(uid, callback) {
+  const db = getFirestore()
+  getDoc(doc(db, 'users', uid))
+    .then(docs => {
+      const data = docs.data()
       callback({ success: true, data })
     })
     .catch(err => {
@@ -133,4 +148,4 @@ async function deleteBeat(uid, beatId, callback) {
   }
 }
 
-export { readUsersBeats, readAllBeats, writeNewBeats, readBeat, updateBeat, deleteBeat }
+export { readUsersInfo, readAllBeats, writeNewBeats, readBeat, updateBeat, deleteBeat, readUsersBeats }

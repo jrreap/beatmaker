@@ -12,7 +12,6 @@ function createNewUser(email, password, name, callback) {
             setDoc(doc(db, "users", userId), {
                 email: email,
                 name: name,
-                beats: []
             });
             callback({ "success": true, "userId": userId })
 
