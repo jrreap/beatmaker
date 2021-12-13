@@ -51,6 +51,7 @@ async function deleteBeat(beatId) {
     sendToastMessage('Successfully deleted beat!', true)
     toggleConfirmModal()
   } catch (err) {
+    handleLogout() // Likely the token expired
     console.error(err)
   }
 }
@@ -74,6 +75,7 @@ async function readUserBeats() {
     userBeatData = data
     generateBeatCards(userBeatData)
   } catch (err) {
+    handleLogout() // Likely the token expired
     console.error(err)
   }
 }
@@ -98,6 +100,7 @@ async function readUsersInfo() {
     $("#user-name").append(data.name)
 
   } catch (err) {
+    handleLogout() // Likely the token expired
     console.error(err)
   }
 }
@@ -188,20 +191,22 @@ function toggleConfirmModal() {
  * Logout function to trigger on button click
  */
 function logoutBtn() {
-  $('#logout-btn').on('click', function (e) {
-    $.ajax({
-      url: '/signOut',
-      type: 'POST',
-      statusCode: {
-        200: function () {
-          sessionStorage.removeItem('uid')
-          window.location.href = '/'
-        },
-        500: function (result) {
-          console.log(result)
-          // display_alert(result.replace("Firebase: ", ''), 'danger')
-        }
+  $('#logout-btn').on('click', handleLogout)
+}
+
+function handleLogout() {
+  $.ajax({
+    url: '/signOut',
+    type: 'POST',
+    statusCode: {
+      200: function () {
+        sessionStorage.removeItem('uid')
+        window.location.href = '/'
+      },
+      500: function (result) {
+        console.log(result)
+        // display_alert(result.replace("Firebase: ", ''), 'danger')
       }
-    })
+    }
   })
 }

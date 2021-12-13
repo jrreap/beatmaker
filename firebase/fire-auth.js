@@ -40,19 +40,16 @@ function signInUser(email, password, callback) {
 
 function sessionAuth(uid, callback) {
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const userID = user.uid;
-            if (uid == userID) {
-                callback({ "isLogedIn": true, "userId": userID })
-            } else {
-                callback({ "isLogedIn": false, "error": "Not Logged In" })
-            }
+    console.log(uid)
+    if (uid) {
+        if (uid !== 'null') {
+            callback({ "isLogedIn": true, "userId": uid })
         } else {
             callback({ "isLogedIn": false, "error": "Not Logged In" })
         }
-    });
-
+    } else {
+        callback({ "isLogedIn": false, "error": "Not Logged In" })
+    }
 }
 
 async function authMiddleware(req, res, next) {

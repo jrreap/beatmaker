@@ -16,6 +16,7 @@ function initialize() {
     statusCode: {
       200: function (result) {
         if (result) {
+          logoutBtn()
           GetBeatsArray()
         }
       },
@@ -27,21 +28,26 @@ function initialize() {
 }
 
 async function GetBeatsArray() {
-  const res = await fetch('/getAllBeats', {
-    headers: {
-      'Content-Type': 'application/json',
-      uid: sessionStorage.getItem('uid')
-    },
-    method: 'GET'
-  })
+  try {
+    const res = await fetch('/getAllBeats', {
+      headers: {
+        'Content-Type': 'application/json',
+        uid: sessionStorage.getItem('uid')
+      },
+      method: 'GET'
+    })
 
-  if (!res.ok) {
-    throw new Error('Response returned with non 200 error code')
+    if (!res.ok) {
+      throw new Error('Response returned with non 200 error code')
+    }
+
+    const { data } = await res.json()
+    allbeats = data
+    generateBeatCards(data)
+  } catch (err) {
+    console.error(err)
+    handleLogout() // Likely the token expired
   }
-
-  const { data } = await res.json()
-  allbeats = data
-  generateBeatCards(data)
 
 }
 
@@ -64,7 +70,7 @@ function generateBeatCards(data) {
     const colDiv = $(`<div class="col" style="margin:2%">`)
     allBeatCards.append(colDiv)
 
-    const card = $(`<div class="card" style="width: 12rem;">`)
+    const card = $(`<div class="card bg-dark" style="width: 12rem;">`)
     colDiv.append(card)
 
     const image = $(`<img class="card-img-top" src="${imagePath}" alt="Card image cap">`)
@@ -79,7 +85,31 @@ function generateBeatCards(data) {
     const cardAuthor = $(` <p class="card-text">${author}</p>`)
     cardBody.append(cardAuthor)
 
-    const cardGoToBeat = $(`<a href="/beatmaker.html?id=${beatId}" class="btn btn-primary">View Beat</a>`)
+    const cardGoToBeat = $(`<a href="/beatmaker.html?id=${beatId}&catalog=true" class="btn btn-primary">View Beat</a>`)
     cardBody.append(cardGoToBeat)
   }
+}
+
+/**
+ * Logout function to trigger on button click
+ */
+function logoutBtn() {
+  $('#logout-btn').on('click', handleLogout)
+}
+
+function handleLogout() {
+  $.ajax({
+    url: '/signOut',
+    type: 'POST',
+    statusCode: {
+      200: function () {
+        sessionStorage.removeItem('uid')
+        window.location.href = '/'
+      },
+      500: function (result) {
+        console.log(result)
+        // display_alert(result.replace("Firebase: ", ''), 'danger')
+      }
+    }
+  })
 }
