@@ -162,7 +162,7 @@ app.get('/readUserBeats', (req, res) => {
 app.get('/getAllBeats', (req, res) => {
   readAllBeats((result) => {
     if (result.success) {
-      res.status(200).send(result.data)
+      res.status(200).send({ data: result.data })
     } else {
       res.status(203).send([])
     }
