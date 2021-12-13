@@ -124,7 +124,7 @@ function generateCard(row, beatObject) {
   row.append(card)
 
   // Bind to the delete button
-  card.find('.card-footer').last('a').on('click', () => {
+  card.find('.card-footer a').last().on('click', () => {
     $('#confirm').on('click', () => {
       deleteBeat(beatObject.beatId)
     })
