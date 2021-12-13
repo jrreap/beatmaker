@@ -29,7 +29,6 @@ function signInUser(email, password, callback) {
         .then((userCredential) => {
             const uid = userCredential.user.uid
             const userData = { name: userCredential.user.displayName, email: userCredential.user.email }
-            console.log(userData)
             callback({ "success": true, "userId": uid, "userData": userData })
         })
         .catch((error) => {
