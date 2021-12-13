@@ -8,6 +8,7 @@ function createNewUser(email, password, name, callback) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const userId = userCredential.user.uid
+            updateProfile(userCredential.user, { displayName: name })
             setDoc(doc(db, "users", userId), {
                 email: email,
                 name: name,

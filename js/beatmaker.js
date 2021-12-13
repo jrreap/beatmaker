@@ -59,7 +59,7 @@ function initialize () {
 
   const name = sessionStorage.getItem('username')
 
-  if (name) {
+  if (name && name !== 'null') {
     beatObject.Author = name
     updateMetaDisplay('Untitled Beat', 'Unknown Genre', beatObject.Author)
   }
