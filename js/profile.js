@@ -104,8 +104,9 @@ async function readUsersInfo() {
 }
 
 function generateBeatCards(data) {
-  console.log(data)
-  $('#cardrow').remove()
+  $('.cardrow').each((num, ele) => {
+    ele.remove()
+  })
 
   if (data.length === 0) {
     $('#warning').removeClass('d-none')
@@ -122,7 +123,7 @@ function generateBeatCards(data) {
 }
 
 function createCardRow() {
-  const row = $('<div id="cardrow" class="row mt-4"></div>')
+  const row = $('<div class="row cardrow mt-4"></div>')
   $('#displayArea').append(row)
 
   return row
@@ -147,7 +148,7 @@ function generateCard(row, beatObject) {
   row.append(card)
 
   // Bind to the delete button
-  card.find('.card-footer').last('a').on('click', () => {
+  card.find('.card-footer a').last().on('click', () => {
     $('#confirm').on('click', () => {
       deleteBeat(beatObject.beatId)
     })
