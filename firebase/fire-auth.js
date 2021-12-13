@@ -41,8 +41,9 @@ function signInUser(email, password, callback) {
 
 function sessionAuth(uid, callback) {
     const auth = getAuth();
+    console.log(uid)
     if (uid) {
-        if (uid !== undefined) {
+        if (uid !== 'null') {
             callback({ "isLogedIn": true, "userId": uid })
         } else {
             callback({ "isLogedIn": false, "error": "Not Logged In" })
