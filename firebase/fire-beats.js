@@ -3,20 +3,19 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 function readAllBeats(callback) {
   const db = getFirestore()
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      onSnapshot(collection(db, 'beats'), (querySnapshot) => {
-        const beats = []
-        querySnapshot.forEach((doc) => {
-          beats.push(doc.data())
-        })
-        callback({ success: true, data: beats })
-      })
-    } else {
-      callback({ success: false, data: 'Cannot Access Users Beats' })
-    }
-  })
+
+  getDocs(collection(db, 'beats'))
+    .then(docs => {
+      const beats = []
+      docs.forEach((doc) => {
+        beats.push(doc.data())
+      });
+      callback({ success: true, data: beats })
+    })
+    .catch(err => {
+      console.error(err)
+      callback({ success: false, data: err.message })
+    })
 }
 
 
@@ -74,27 +73,33 @@ function readBeat(uid, beatID, catalog, callback) {
   }
 }
 
-function writeNewBeats(uid, Author, Title, Genre, Description, Beat, saveToCatalog, callback) {
+async function writeNewBeats(uid, Author, Title, Genre, Description, Beat, saveToCatalog, callback) {
   const db = getFirestore()
   const beatReference = doc(collection(db, 'beats'))
   const newBeatId = beatReference.id
-  setDoc(beatReference, {
-    beatId: newBeatId,
-    Author: Author,
-    Title: Title,
-    Genre: Genre,
-    Description: Description,
-    Beat: Beat
-  })
-  setDoc(doc(db, 'users', uid, 'beats', newBeatId), {
-    beatId: newBeatId,
-    Author: Author,
-    Title: Title,
-    Genre: Genre,
-    Description: Description,
-    Beat: Beat
-  })
-  callback({ success: true, data: newBeatId })
+
+  try {
+    await setDoc(beatReference, {
+      beatId: newBeatId,
+      Author: Author,
+      Title: Title,
+      Genre: Genre,
+      Description: Description,
+      Beat: Beat
+    })
+    await setDoc(doc(db, 'users', uid, 'beats', newBeatId), {
+      beatId: newBeatId,
+      Author: Author,
+      Title: Title,
+      Genre: Genre,
+      Description: Description,
+      Beat: Beat
+    })
+    callback({ success: true, data: newBeatId })
+  } catch (err) {
+    console.error(err)
+    callback({ success: false, data: err.message })
+  }
 }
 
 /**

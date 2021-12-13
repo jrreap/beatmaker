@@ -84,7 +84,7 @@ app.post('/signOut', (req, res) => {
 
 app.use(authMiddleware)
 
-app.post('/writeNewBeat', (req, res) => {
+app.post('/writeNewBeat', async (req, res) => {
   const Author = req.body.Author
   const Title = req.body.Title
   const Genre = req.body.Genre
@@ -93,9 +93,9 @@ app.post('/writeNewBeat', (req, res) => {
   const saveToCatalog = req.body.saveToCatalog
   const uid = req.uid
 
-  writeNewBeats(uid, Author, Title, Genre, Description, Beat, saveToCatalog, (result) => {
+  await writeNewBeats(uid, Author, Title, Genre, Description, Beat, saveToCatalog, (result) => {
     if (result.success) {
-      res.status(200).send({ data: result.data })
+      res.status(200).json({ data: result.data })
     } else {
       res.status(203).send('Could Not Update Beats')
     }
@@ -162,7 +162,7 @@ app.get('/readUserBeats', (req, res) => {
 app.get('/getAllBeats', (req, res) => {
   readAllBeats((result) => {
     if (result.success) {
-      res.status(200).send({ data: result.data })
+      res.status(200).json({ data: result.data })
     } else {
       res.status(203).send([])
     }

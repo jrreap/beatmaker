@@ -64,7 +64,7 @@ function generateBeatCards(data) {
     const colDiv = $(`<div class="col" style="margin:2%">`)
     allBeatCards.append(colDiv)
 
-    const card = $(`<div class="card" style="width: 12rem;">`)
+    const card = $(`<div class="card bg-dark" style="width: 12rem;">`)
     colDiv.append(card)
 
     const image = $(`<img class="card-img-top" src="${imagePath}" alt="Card image cap">`)
@@ -79,7 +79,7 @@ function generateBeatCards(data) {
     const cardAuthor = $(` <p class="card-text">${author}</p>`)
     cardBody.append(cardAuthor)
 
-    const cardGoToBeat = $(`<a href="/beatmaker.html?id=${beatId}" class="btn btn-primary">View Beat</a>`)
+    const cardGoToBeat = $(`<a href="/beatmaker.html?id=${beatId}&catalog=true" class="btn btn-primary">View Beat</a>`)
     cardBody.append(cardGoToBeat)
   }
 }
