@@ -57,6 +57,13 @@ function initialize () {
   const id = params.get('id')
   const loadFromCatalog = params.get('catalog')
 
+  const name = sessionStorage.getItem('username')
+
+  if (name) {
+    beatObject.Author = name
+    updateMetaDisplay('Untitled Beat', 'Unknown Genre', beatObject.Author)
+  }
+
   if (id) {
     loadBeat(id, loadFromCatalog)
   }
@@ -151,7 +158,10 @@ async function createBeat () {
       return
     }
 
+    const name = sessionStorage.getItem('username')
+
     beatObject.Genre = inputData.genre
+    beatObject.Author = name ? name : 'Unknown Author'
     beatObject.Title = catalog ? 'Copy of ' + inputData.title : inputData.title
     beatObject.Description = inputData.description
 
@@ -176,7 +186,7 @@ async function createBeat () {
     editing = true
     catalog = false
 
-    updateMetaDisplay(beatObject.Title)
+    updateMetaDisplay(beatObject.Title, beatObject.Genre, beatObject.Author)
 
     // Toggle the bootstrap modal
     const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'))
@@ -224,6 +234,8 @@ async function updateBeat (beatID) {
       throw new Error('Request returned a non 200 response code')
     }
 
+    updateMetaDisplay(beatObject.Title, beatObject.Genre, beatObject.Author)
+
     // Toggle the bootstrap modal
     const saveModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'))
     saveModal.toggle()
@@ -264,7 +276,7 @@ async function loadBeat (id, isCatalog) {
     $('#genreInput1').val(beatObject.Genre)
     $('#descriptionInput1').val(beatObject.Description)
 
-    updateMetaDisplay(beatObject.Title)
+    updateMetaDisplay(beatObject.Title, beatObject.Genre, beatObject.Author)
 
     const beatMatrix = beatObject.Beat
     for (let row = 0; row < 6; row++) {
@@ -339,7 +351,8 @@ function sendToastMessage (message, success = false) {
  * @param {string} author The author of this beat (if applicable)
  */
 function updateMetaDisplay (title, genre = '', author = '') {
-  $('#title').text(title)
+  $('.song-title').text(title)
+  $('.song-meta').text(`${author} | ${genre}`)
 }
 
 /**
