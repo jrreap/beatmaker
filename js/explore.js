@@ -16,6 +16,7 @@ function initialize() {
     statusCode: {
       200: function (result) {
         if (result) {
+          logoutBtn()
           GetBeatsArray()
         }
       },
@@ -27,21 +28,26 @@ function initialize() {
 }
 
 async function GetBeatsArray() {
-  const res = await fetch('/getAllBeats', {
-    headers: {
-      'Content-Type': 'application/json',
-      uid: sessionStorage.getItem('uid')
-    },
-    method: 'GET'
-  })
+  try {
+    const res = await fetch('/getAllBeats', {
+      headers: {
+        'Content-Type': 'application/json',
+        uid: sessionStorage.getItem('uid')
+      },
+      method: 'GET'
+    })
 
-  if (!res.ok) {
-    throw new Error('Response returned with non 200 error code')
+    if (!res.ok) {
+      throw new Error('Response returned with non 200 error code')
+    }
+
+    const { data } = await res.json()
+    allbeats = data
+    generateBeatCards(data)
+  } catch (err) {
+    console.error(err)
+    handleLogout() // Likely the token expired
   }
-
-  const { data } = await res.json()
-  allbeats = data
-  generateBeatCards(data)
 
 }
 
@@ -82,4 +88,28 @@ function generateBeatCards(data) {
     const cardGoToBeat = $(`<a href="/beatmaker.html?id=${beatId}&catalog=true" class="btn btn-primary">View Beat</a>`)
     cardBody.append(cardGoToBeat)
   }
+}
+
+/**
+ * Logout function to trigger on button click
+ */
+function logoutBtn() {
+  $('#logout-btn').on('click', handleLogout)
+}
+
+function handleLogout() {
+  $.ajax({
+    url: '/signOut',
+    type: 'POST',
+    statusCode: {
+      200: function () {
+        sessionStorage.removeItem('uid')
+        window.location.href = '/'
+      },
+      500: function (result) {
+        console.log(result)
+        // display_alert(result.replace("Firebase: ", ''), 'danger')
+      }
+    }
+  })
 }
