@@ -74,6 +74,9 @@ async function readUserBeats() {
 
     const { data } = await res.json()
     userBeatData = data
+
+    // Update level
+    updateLevel(userBeatData.length)
     generateBeatCards(userBeatData)
   } catch (err) {
     handleLogout() // Likely the token expired
@@ -186,6 +189,31 @@ function sendToastMessage(message, success = false) {
 function toggleConfirmModal() {
   const confirmModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmModal'))
   confirmModal.toggle()
+}
+
+/**
+ * Updates the level based on the beatCount
+ */
+function updateLevel (beatCount) {
+  const level = $('#level')
+  level.text('')
+
+  console.log(beatCount)
+
+  switch (beatCount) {
+    case 0:
+    case 1:
+      level.text('Starting Beat Maker')
+      break
+    case 2:
+      level.text('Apprentice Beat Maker')
+      break
+    case 3:
+      level.text('Master Beat Maker')
+      break
+    default:
+      level.text('Legendary Beat Maker')
+  }
 }
 
 /**
