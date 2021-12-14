@@ -229,7 +229,7 @@ async function updateBeat(beatID) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        uid: sessionStorage.removeItem('uid')
+        uid: sessionStorage.getItem('uid')
       }
     })
 
