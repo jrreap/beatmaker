@@ -1,5 +1,7 @@
 let userBeatData = []
 
+let quotes = ['A beat a day keeps the silence away!','Beats are life!', 'Be a beat lord!', 'You\'re the maestro!'];
+
 $(document).ready(function () {
   initialize()
 })
@@ -16,6 +18,7 @@ function initialize() {
           readUsersInfo()
           logoutBtn()
           readUserBeats()
+          genQuote();
         }
       },
       203: function (result) {
@@ -213,6 +216,11 @@ function updateLevel (beatCount) {
     default:
       level.text('Legendary Beat Maker')
   }
+}
+
+function genQuote() {
+  document.getElementById("quote").innerHTML = "Quote of the day: "
+   + quotes[Math.floor(Math.random() * 3) + 1];
 }
 
 /**
